@@ -1,7 +1,9 @@
 'use client'
 
+import { useState } from 'react'
 import { useInView } from '@/hooks/useInView'
 import type { CertRow } from '@/lib/db'
+import Lightbox from '@/components/Lightbox'
 
 const categoryColor: Record<string, string> = {
   International: 'bg-blue-100 text-blue-700',
@@ -10,10 +12,21 @@ const categoryColor: Record<string, string> = {
   Industry:      'bg-purple-100 text-purple-700',
 }
 
-function CertCard({ cert, index, visible }: { cert: CertRow; index: number; visible: boolean }) {
+function CertCard({
+  cert,
+  index,
+  visible,
+  onClick,
+}: {
+  cert: CertRow
+  index: number
+  visible: boolean
+  onClick: () => void
+}) {
   return (
     <div
-      className={`group bg-white rounded-lg border border-gray-100 overflow-hidden hover:border-blue-200 hover:shadow-md transition-all duration-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+      onClick={onClick}
+      className={`group bg-white rounded-lg border border-gray-100 overflow-hidden hover:border-blue-200 hover:shadow-md transition-all duration-500 cursor-pointer ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
       style={{ transitionDelay: `${Math.min(index * 50, 400)}ms` }}
     >
       {/* Image area — 3:4 ratio */}
@@ -46,30 +59,62 @@ function CertCard({ cert, index, visible }: { cert: CertRow; index: number; visi
 export default function CertGrid({ certifications }: { certifications: CertRow[] }) {
   const { ref: headRef, inView: headIn } = useInView()
   const { ref: gridRef, inView: gridIn } = useInView()
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+
+  // Only certs with images are navigable in lightbox
+  const withImage = certifications.filter((c) => c.img_url)
+
+  const openLightbox = (cert: CertRow) => {
+    const idx = withImage.findIndex((c) => c.id === cert.id)
+    if (idx !== -1) setLightboxIndex(idx)
+  }
+
+  const prev = () => setLightboxIndex((i) => (i !== null ? (i - 1 + withImage.length) % withImage.length : null))
+  const next = () => setLightboxIndex((i) => (i !== null ? (i + 1) % withImage.length : null))
+
+  const activeCert = lightboxIndex !== null ? withImage[lightboxIndex] : null
 
   return (
-    <div className="py-24">
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        <div
-          ref={headRef}
-          className={`mb-16 transition-all duration-700 ${headIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
-        >
-          <p className="text-blue-500 text-xs font-semibold tracking-[0.25em] uppercase mb-4">
-            Certifications
-          </p>
-          <h2 className="text-gray-900 text-3xl md:text-4xl font-bold">
-            Domestic &amp; International
-            <br />
-            Certification Status
-          </h2>
-        </div>
+    <>
+      <div className="py-24">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          <div
+            ref={headRef}
+            className={`mb-16 transition-all duration-700 ${headIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+          >
+            <p className="text-blue-500 text-xs font-semibold tracking-[0.25em] uppercase mb-4">
+              Certifications
+            </p>
+            <h2 className="text-gray-900 text-3xl md:text-4xl font-bold">
+              Domestic &amp; International
+              <br />
+              Certification Status
+            </h2>
+          </div>
 
-        <div ref={gridRef} className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {certifications.map((cert, i) => (
-            <CertCard key={cert.id} cert={cert} index={i} visible={gridIn} />
-          ))}
+          <div ref={gridRef} className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {certifications.map((cert, i) => (
+              <CertCard
+                key={cert.id}
+                cert={cert}
+                index={i}
+                visible={gridIn}
+                onClick={() => cert.img_url && openLightbox(cert)}
+              />
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+
+      {activeCert && (
+        <Lightbox
+          src={activeCert.img_url!}
+          alt={activeCert.name}
+          onClose={() => setLightboxIndex(null)}
+          onPrev={withImage.length > 1 ? prev : undefined}
+          onNext={withImage.length > 1 ? next : undefined}
+        />
+      )}
+    </>
   )
 }

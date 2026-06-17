@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import Lightbox from '@/components/Lightbox'
 
 type TrademarkEntry = {
   id: string
@@ -51,7 +52,13 @@ function MapController({ target }: { target: TrademarkEntry | null }) {
 // ---------------------------------------------------------------------------
 // Left panel — certificate image only
 // ---------------------------------------------------------------------------
-function CertPanel({ country }: { country: TrademarkEntry | null }) {
+function CertPanel({
+  country,
+  onImageClick,
+}: {
+  country: TrademarkEntry | null
+  onImageClick: () => void
+}) {
   if (!country) {
     return (
       <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 rounded-xl border border-dashed border-gray-200 text-center px-6 gap-3">
@@ -68,12 +75,25 @@ function CertPanel({ country }: { country: TrademarkEntry | null }) {
   return (
     <div className="w-full h-full flex items-center justify-center">
       {country.img_url ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={country.img_url}
-          alt={`${country.name} trademark certificate`}
-          className="w-full h-full object-contain rounded-lg shadow-sm"
-        />
+        <button
+          onClick={onImageClick}
+          className="w-full h-full group relative"
+          aria-label="View certificate"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={country.img_url}
+            alt={`${country.name} trademark certificate`}
+            className="w-full h-full object-contain rounded-lg shadow-sm group-hover:opacity-90 transition-opacity"
+          />
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="bg-black/40 rounded-full p-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+              </svg>
+            </div>
+          </div>
+        </button>
       ) : (
         <div className="w-full h-full bg-white rounded-lg border border-gray-200 shadow-sm flex flex-col items-center justify-center gap-2">
           <div className="space-y-1.5 w-20">
@@ -96,6 +116,7 @@ function CertPanel({ country }: { country: TrademarkEntry | null }) {
 export default function TrademarkMap() {
   const [trademarks, setTrademarks] = useState<TrademarkEntry[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
 
   useEffect(() => {
     fetch('/api/trademarks')
@@ -120,12 +141,16 @@ export default function TrademarkMap() {
   const toggle = (id: string) => setSelectedId(selectedId === id ? null : id)
 
   return (
+    <>
     <div className="flex flex-col lg:flex-row gap-5">
 
       {/* ── Left: Certificate image panel ── */}
       <div className="w-full lg:w-[330px] lg:shrink-0">
         <div className="aspect-[3/4] lg:h-[440px] lg:aspect-auto">
-          <CertPanel country={selectedCountry} />
+          <CertPanel
+            country={selectedCountry}
+            onImageClick={() => selectedCountry?.img_url && setLightboxOpen(true)}
+          />
         </div>
       </div>
 
@@ -178,5 +203,14 @@ export default function TrademarkMap() {
       </div>
 
     </div>
+
+    {lightboxOpen && selectedCountry?.img_url && (
+      <Lightbox
+        src={selectedCountry.img_url}
+        alt={selectedCountry.name}
+        onClose={() => setLightboxOpen(false)}
+      />
+    )}
+    </>
   )
 }
