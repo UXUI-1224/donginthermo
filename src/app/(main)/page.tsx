@@ -52,7 +52,7 @@ function CountUp({ target, suffix = '' }: { target: number; suffix?: string }) {
 //   4. Add  src="<paste URL here>"  to the <video> element below
 //   5. Remove or reduce opacity of the gradient overlay once video is in place
 // ---------------------------------------------------------------------------
-function HeroSection() {
+function HeroSection({ videoUrl }: { videoUrl: string }) {
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
@@ -62,14 +62,13 @@ function HeroSection() {
 
   return (
     <section className="relative h-screen flex items-center overflow-hidden bg-blue-900">
-      {/* Video — swap src="" with Supabase public URL when ready */}
       <video
         autoPlay
         muted
         loop
         playsInline
         className="absolute inset-0 w-full h-full object-cover opacity-40"
-        src=""
+        src={videoUrl || undefined}
       />
 
       {/* Gradient overlay */}
@@ -356,14 +355,14 @@ function IPSection() {
 // ---------------------------------------------------------------------------
 // Products Section
 // ---------------------------------------------------------------------------
-const products = [
-  { code: 'VAN',  href: '/products/van',  title: 'Van Type',        imgUrl: '' },
-  { code: 'NOSE', href: '/products/nose', title: 'Nose Type',       imgUrl: '' },
-  { code: 'ESC',  href: '/products/esc',  title: 'ESC Type',        imgUrl: '' },
-  { code: 'SUB',  href: '/products/sub',  title: 'Sub Type',        imgUrl: '' },
+const PRODUCT_CATEGORIES = [
+  { code: 'VAN',  href: '/products/van',  title: 'Van Type',  settingKey: 'product_van_img_url' },
+  { code: 'NOSE', href: '/products/nose', title: 'Nose Type', settingKey: 'product_nose_img_url' },
+  { code: 'ESC',  href: '/products/esc',  title: 'ESC Type',  settingKey: 'product_esc_img_url' },
+  { code: 'SUB',  href: '/products/sub',  title: 'Sub Type',  settingKey: 'product_sub_img_url' },
 ]
 
-function ProductsSection() {
+function ProductsSection({ categoryImages }: { categoryImages: Record<string, string> }) {
   const { ref: headRef, inView: headIn } = useInView()
   const { ref: gridRef, inView: gridIn } = useInView()
 
@@ -399,7 +398,9 @@ function ProductsSection() {
           ref={gridRef}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
         >
-          {products.map((p, i) => (
+          {PRODUCT_CATEGORIES.map((p, i) => {
+            const imgUrl = categoryImages[p.settingKey] ?? ''
+            return (
             <Link
               key={p.code}
               href={p.href}
@@ -409,9 +410,9 @@ function ProductsSection() {
               style={{ transitionDelay: `${i * 80}ms` }}
             >
               {/* Background image */}
-              {p.imgUrl ? (
+              {imgUrl ? (
                 <img
-                  src={p.imgUrl}
+                  src={imgUrl}
                   alt={p.title}
                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
@@ -440,7 +441,7 @@ function ProductsSection() {
                 </div>
               </div>
             </Link>
-          ))}
+          )})}
         </div>
       </div>
     </section>
@@ -504,13 +505,22 @@ function CTASection() {
 // Page
 // ---------------------------------------------------------------------------
 export default function Home() {
+  const [settings, setSettings] = useState<Record<string, string>>({})
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then((r) => r.json())
+      .then(setSettings)
+      .catch(() => {})
+  }, [])
+
   return (
     <>
-      <HeroSection />
+      <HeroSection videoUrl={settings.hero_video_url ?? ''} />
       <CompanySection />
       <HistorySection />
       <IPSection />
-      <ProductsSection />
+      <ProductsSection categoryImages={settings} />
       <CTASection />
     </>
   )
