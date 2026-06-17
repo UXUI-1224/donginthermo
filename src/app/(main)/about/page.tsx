@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { useInView } from '@/hooks/useInView'
 
 // ---------------------------------------------------------------------------
@@ -31,7 +32,7 @@ function PageHero() {
 //   2. Upload the video file
 //   3. Copy the public URL and add to src="" below
 // ---------------------------------------------------------------------------
-function CEOSection() {
+function CEOSection({ videoUrl }: { videoUrl: string }) {
   const { ref: videoRef, inView: videoIn } = useInView()
   const { ref: textRef, inView: textIn } = useInView()
 
@@ -47,31 +48,22 @@ function CEOSection() {
               videoIn ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
             }`}
           >
-            {/* Video — replace src with Supabase URL when ready */}
-            <video
-              controls
-              className="absolute inset-0 w-full h-full object-cover"
-              src=""
-              poster=""
-            />
-            {/* Placeholder overlay shown when no src */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950 [video[src='']~&]:flex hidden">
-              <div className="w-14 h-14 rounded-full bg-white/10 border border-white/20 flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
+            {videoUrl ? (
+              <video
+                controls
+                className="absolute inset-0 w-full h-full object-cover"
+                src={videoUrl}
+              />
+            ) : (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950">
+                <div className="w-14 h-14 rounded-full bg-white/10 border border-white/20 flex items-center justify-center mb-4">
+                  <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+                <p className="text-white/50 text-xs tracking-widest uppercase">CEO Interview</p>
               </div>
-              <p className="text-white/50 text-xs tracking-widest uppercase">CEO Interview</p>
-            </div>
-            {/* Always-visible placeholder until video src is set */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950">
-              <div className="w-14 h-14 rounded-full bg-white/10 border border-white/20 flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </div>
-              <p className="text-white/50 text-xs tracking-widest uppercase">CEO Interview</p>
-            </div>
+            )}
           </div>
 
           {/* Right: Text */}
@@ -246,25 +238,25 @@ function HistorySection() {
 // ---------------------------------------------------------------------------
 // Management Values Section
 // ---------------------------------------------------------------------------
-const values = [
+const VALUES_BASE = [
   {
     title: 'Intelligent',
     desc: 'Leading technology in a highly growing refrigeration industry. Investing in human resources — the origin of technology.',
-    imgUrl: '', // Replace with Supabase public URL when ready
+    settingKey: 'values_intelligent_img_url',
   },
   {
     title: 'Innovative',
     desc: 'Innovative solution provider in a rapidly changing business field. Distinguished technical competence for customer satisfaction.',
-    imgUrl: '',
+    settingKey: 'values_innovative_img_url',
   },
   {
     title: 'Insightful',
     desc: 'Presenting directions of development with keen insight. Future-oriented growth with customers.',
-    imgUrl: '',
+    settingKey: 'values_insightful_img_url',
   },
 ]
 
-function ValuesSection() {
+function ValuesSection({ images }: { images: Record<string, string> }) {
   const { ref: headRef, inView: headIn } = useInView()
   const { ref: gridRef, inView: gridIn } = useInView()
 
@@ -286,35 +278,33 @@ function ValuesSection() {
         </div>
 
         <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {values.map((v, i) => (
-            <div
-              key={v.title}
-              className={`group relative rounded-xl overflow-hidden aspect-[4/3] transition-all duration-500 ${
-                gridIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-              style={{ transitionDelay: `${i * 100}ms` }}
-            >
-              {/* Background */}
-              {v.imgUrl ? (
-                <img
-                  src={v.imgUrl}
-                  alt={v.title}
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-              ) : (
-                <div className="absolute inset-0 bg-blue-900" />
-              )}
-
-              {/* Dim overlay */}
-              <div className="absolute inset-0 bg-black/45 group-hover:bg-black/55 transition-colors duration-300" />
-
-              {/* Content */}
-              <div className="absolute inset-0 flex flex-col justify-end p-8">
-                <p className="text-white text-xl font-bold mb-2">{v.title}</p>
-                <p className="text-white/70 text-sm leading-relaxed">{v.desc}</p>
+          {VALUES_BASE.map((v, i) => {
+            const imgUrl = images[v.settingKey] ?? ''
+            return (
+              <div
+                key={v.title}
+                className={`group relative rounded-xl overflow-hidden aspect-[4/3] transition-all duration-500 ${
+                  gridIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                }`}
+                style={{ transitionDelay: `${i * 100}ms` }}
+              >
+                {imgUrl ? (
+                  <img
+                    src={imgUrl}
+                    alt={v.title}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-blue-900" />
+                )}
+                <div className="absolute inset-0 bg-black/45 group-hover:bg-black/55 transition-colors duration-300" />
+                <div className="absolute inset-0 flex flex-col justify-end p-8">
+                  <p className="text-white text-xl font-bold mb-2">{v.title}</p>
+                  <p className="text-white/70 text-sm leading-relaxed">{v.desc}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>
@@ -325,12 +315,21 @@ function ValuesSection() {
 // Page
 // ---------------------------------------------------------------------------
 export default function AboutPage() {
+  const [settings, setSettings] = useState<Record<string, string>>({})
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then((r) => r.json())
+      .then(setSettings)
+      .catch(() => {})
+  }, [])
+
   return (
     <>
       <PageHero />
-      <CEOSection />
+      <CEOSection videoUrl={settings.ceo_video_url ?? ''} />
       <HistorySection />
-      <ValuesSection />
+      <ValuesSection images={settings} />
     </>
   )
 }
