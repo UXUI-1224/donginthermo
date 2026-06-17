@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 
-export const config = { api: { bodyParser: false } }
-
 export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
