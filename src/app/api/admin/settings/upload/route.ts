@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 
+export const maxDuration = 60
+
 export async function POST(req: Request) {
   const formData = await req.formData()
   const file = formData.get('file') as File | null
