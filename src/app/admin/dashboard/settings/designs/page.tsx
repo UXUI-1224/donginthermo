@@ -79,19 +79,8 @@ function VideoUploadSlot({
   )
 }
 
-// Accepts full embed HTML or plain URL. Always returns a plain src URL to store.
-function extractSrc(input: string): string {
-  // If it contains an iframe tag, pull out the src attribute
-  const srcMatch = input.match(/src="([^"]+)"/)
-  if (srcMatch) return srcMatch[1].replace(/&amp;/g, '&')
-  // Vimeo page URL → embed URL
-  const vimeoMatch = input.match(/vimeo\.com\/(\d+)/)
-  if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}`
-  // YouTube page URL → embed URL
-  const ytMatch = input.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/)
-  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`
-  return input.trim()
-}
+const VIMEO_EMBED_URL = (id: string) =>
+  `https://player.vimeo.com/video/${id}?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&muted=1&loop=1&controls=0`
 
 function VideoEmbedSlot({
   label,
@@ -106,13 +95,16 @@ function VideoEmbedSlot({
   value: string
   onChange: (url: string) => void
 }) {
-  const [input, setInput] = useState(value)
+  // Extract video ID from stored URL if already saved
+  const savedId = value.match(/vimeo\.com\/video\/(\d+)/)?.[1] ?? ''
+  const [videoId, setVideoId] = useState(savedId)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState('')
 
   const handleSave = async () => {
-    const embedUrl = extractSrc(input.trim())
+    if (!videoId.trim()) return
+    const embedUrl = VIMEO_EMBED_URL(videoId.trim())
     setSaving(true)
     setError('')
     try {
@@ -123,7 +115,6 @@ function VideoEmbedSlot({
       })
       if (!res.ok) throw new Error((await res.json()).error)
       onChange(embedUrl)
-      setInput(embedUrl)
       setSaved(true)
       setTimeout(() => setSaved(false), 2000)
     } catch (e) {
@@ -132,9 +123,6 @@ function VideoEmbedSlot({
       setSaving(false)
     }
   }
-
-  const embedUrl = extractSrc(input.trim())
-  const isEmbed = embedUrl.includes('player.vimeo.com') || embedUrl.includes('youtube.com/embed')
 
   return (
     <div>
@@ -154,24 +142,24 @@ function VideoEmbedSlot({
 
       <div className="flex gap-2">
         <input
-          value={input}
-          onChange={(e) => { setInput(e.target.value); setSaved(false) }}
-          placeholder="Vimeo/YouTube URL 또는 embed 코드 전체 붙여넣기"
+          value={videoId}
+          onChange={(e) => { setVideoId(e.target.value); setSaved(false) }}
+          onKeyDown={(e) => e.key === 'Enter' && handleSave()}
+          placeholder="Vimeo Video ID (예: 1202071951)"
           className="flex-1 px-3.5 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 outline-none focus:border-[#016cab] focus:ring-2 focus:ring-[#016cab]/10 transition-all"
         />
         <button
           onClick={handleSave}
-          disabled={saving || !input.trim()}
+          disabled={saving || !videoId.trim()}
           className="px-4 py-2 bg-[#016cab] hover:bg-[#015689] disabled:opacity-50 text-white text-sm font-semibold rounded-lg transition-colors shrink-0"
         >
           {saving ? 'Saving...' : saved ? 'Saved!' : 'Save'}
         </button>
       </div>
-      {input.trim() && !isEmbed && (
-        <p className="text-xs text-amber-500 mt-1.5">Unrecognized URL — will be saved as-is.</p>
-      )}
       {error && <p className="text-xs text-red-500 mt-1.5">{error}</p>}
-      <p className="text-xs text-gray-400 mt-2">Vimeo/YouTube 페이지 URL 또는 Vimeo에서 복사한 embed 코드 전체를 붙여넣으면 자동으로 변환됩니다.</p>
+      <p className="text-xs text-gray-400 mt-2">
+        Vimeo 영상 URL에서 숫자 ID만 입력하세요. 예: vimeo.com/<strong>1202071951</strong>
+      </p>
     </div>
   )
 }
