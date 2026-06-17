@@ -36,15 +36,16 @@ export async function POST(
   if (uploadError) return NextResponse.json({ error: uploadError.message }, { status: 500 })
 
   const { data: urlData } = supabaseAdmin.storage.from('cert-images').getPublicUrl(path)
+  const freshUrl = `${urlData.publicUrl}?t=${Date.now()}`
 
   const { error: dbError } = await supabaseAdmin
     .from('certifications')
-    .update({ img_url: urlData.publicUrl })
+    .update({ img_url: freshUrl })
     .eq('id', id)
 
   if (dbError) return NextResponse.json({ error: dbError.message }, { status: 500 })
 
-  return NextResponse.json({ img_url: urlData.publicUrl })
+  return NextResponse.json({ img_url: freshUrl })
 }
 
 export async function DELETE(
