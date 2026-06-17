@@ -5,24 +5,13 @@ import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
-// ---------------------------------------------------------------------------
-// Country data
-// NOTE: Add Supabase certificate image URLs to `imgUrl` when ready
-// ---------------------------------------------------------------------------
-const countries = [
-  { id: 'us', name: 'United States',       coords: [37.09,  -95.71] as [number, number], imgUrl: '' },
-  { id: 'ru', name: 'Russia',              coords: [61.52,  105.32] as [number, number], imgUrl: '' },
-  { id: 'ae', name: 'UAE',                 coords: [23.42,   53.85] as [number, number], imgUrl: '' },
-  { id: 'ph', name: 'Philippines',         coords: [12.88,  121.77] as [number, number], imgUrl: '' },
-  { id: 'cl', name: 'Chile',               coords: [-35.68, -71.54] as [number, number], imgUrl: '' },
-  { id: 'ec', name: 'Ecuador',             coords: [ -1.83, -78.18] as [number, number], imgUrl: '' },
-  { id: 'dz', name: 'Algeria',             coords: [28.03,    1.66] as [number, number], imgUrl: '' },
-  { id: 'ye', name: 'Yemen',               coords: [15.55,   48.52] as [number, number], imgUrl: '' },
-  { id: 'jo', name: 'Jordan',              coords: [30.59,   36.24] as [number, number], imgUrl: '' },
-  { id: 'do', name: 'Dominican Rep.',      coords: [18.74,  -70.16] as [number, number], imgUrl: '' },
-  { id: 'kh', name: 'Cambodia',            coords: [12.57,  104.99] as [number, number], imgUrl: '' },
-  { id: 'lb', name: 'Lebanon',             coords: [33.85,   35.86] as [number, number], imgUrl: '' },
-]
+type TrademarkEntry = {
+  id: string
+  name: string
+  lat: number
+  lon: number
+  img_url: string | null
+}
 
 // ---------------------------------------------------------------------------
 // Custom marker icon
@@ -47,23 +36,22 @@ function createMarkerIcon(selected: boolean) {
 // ---------------------------------------------------------------------------
 // Map flyTo controller
 // ---------------------------------------------------------------------------
-function MapController({ selected }: { selected: string | null }) {
+function MapController({ target }: { target: TrademarkEntry | null }) {
   const map = useMap()
   useEffect(() => {
-    const country = countries.find((c) => c.id === selected)
-    if (country) {
-      map.flyTo(country.coords, 5, { duration: 1.2 })
+    if (target) {
+      map.flyTo([target.lat, target.lon], 5, { duration: 1.2 })
     } else {
       map.flyTo([20, 15], 2, { duration: 1.2 })
     }
-  }, [selected, map])
+  }, [target, map])
   return null
 }
 
 // ---------------------------------------------------------------------------
 // Left panel — certificate image only
 // ---------------------------------------------------------------------------
-function CertPanel({ country }: { country: typeof countries[number] | null }) {
+function CertPanel({ country }: { country: TrademarkEntry | null }) {
   if (!country) {
     return (
       <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 rounded-xl border border-dashed border-gray-200 text-center px-6 gap-3">
@@ -79,9 +67,10 @@ function CertPanel({ country }: { country: typeof countries[number] | null }) {
 
   return (
     <div className="w-full h-full flex items-center justify-center">
-      {country.imgUrl ? (
+      {country.img_url ? (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={country.imgUrl}
+          src={country.img_url}
           alt={`${country.name} trademark certificate`}
           className="w-full h-full object-contain rounded-lg shadow-sm"
         />
@@ -105,8 +94,17 @@ function CertPanel({ country }: { country: typeof countries[number] | null }) {
 // Main component
 // ---------------------------------------------------------------------------
 export default function TrademarkMap() {
+  const [trademarks, setTrademarks] = useState<TrademarkEntry[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
-  const selectedCountry = countries.find((c) => c.id === selectedId) ?? null
+
+  useEffect(() => {
+    fetch('/api/trademarks')
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data)) setTrademarks(data)
+      })
+      .catch(() => {/* silently fail */})
+  }, [])
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -118,13 +116,14 @@ export default function TrademarkMap() {
     })
   }, [])
 
+  const selectedCountry = trademarks.find((c) => c.id === selectedId) ?? null
   const toggle = (id: string) => setSelectedId(selectedId === id ? null : id)
 
   return (
     <div className="flex flex-col lg:flex-row gap-5">
 
       {/* ── Left: Certificate image panel ── */}
-      <div className="w-full lg:w-[330px] lg:shrink-0" style={{ height: undefined }}>
+      <div className="w-full lg:w-[330px] lg:shrink-0">
         <div className="aspect-[3/4] lg:h-[440px] lg:aspect-auto">
           <CertPanel country={selectedCountry} />
         </div>
@@ -134,21 +133,23 @@ export default function TrademarkMap() {
       <div className="flex-1 min-w-0 flex flex-col gap-2.5" style={{ minHeight: 360 }}>
 
         {/* Country text buttons */}
-        <div className="flex items-center gap-1.5 flex-wrap">
-          {countries.map((c) => (
-            <button
-              key={c.id}
-              onClick={() => toggle(c.id)}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
-                selectedId === c.id
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              {c.name}
-            </button>
-          ))}
-        </div>
+        {trademarks.length > 0 && (
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {trademarks.map((c) => (
+              <button
+                key={c.id}
+                onClick={() => toggle(c.id)}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
+                  selectedId === c.id
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                {c.name}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Map */}
         <div className="flex-1 rounded-xl overflow-hidden border border-gray-100 shadow-sm" style={{ minHeight: 300 }}>
@@ -163,11 +164,11 @@ export default function TrademarkMap() {
               attribution='&copy; <a href="https://carto.com/">CARTO</a>'
               url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
             />
-            <MapController selected={selectedId} />
-            {countries.map((c) => (
+            <MapController target={selectedCountry} />
+            {trademarks.map((c) => (
               <Marker
                 key={c.id}
-                position={c.coords}
+                position={[c.lat, c.lon]}
                 icon={createMarkerIcon(selectedId === c.id)}
                 eventHandlers={{ click: () => toggle(c.id) }}
               />
