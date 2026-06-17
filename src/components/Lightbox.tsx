@@ -28,7 +28,7 @@ export default function Lightbox({ src, alt, onClose, onPrev, onNext }: Lightbox
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center"
+      className="fixed inset-0 z-[9999] flex items-center justify-center"
       onClick={onClose}
     >
       {/* Dark overlay */}
