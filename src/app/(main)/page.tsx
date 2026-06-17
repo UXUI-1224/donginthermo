@@ -63,12 +63,23 @@ function HeroSection({ videoUrl }: { videoUrl: string }) {
   return (
     <section className="relative h-screen flex items-center overflow-hidden bg-blue-900">
       {videoUrl && (
-        <iframe
-          src={videoUrl}
-          className="absolute inset-0 w-full h-full pointer-events-none opacity-40"
-          style={{ border: 'none' }}
-          allow="autoplay; fullscreen"
-        />
+        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40">
+          <iframe
+            src={videoUrl}
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              width: '100vw',
+              height: '56.25vw',   /* 16:9 — wider than tall */
+              minWidth: '177.78vh', /* 16:9 — taller than wide */
+              minHeight: '100vh',
+              transform: 'translate(-50%, -50%)',
+              border: 'none',
+            }}
+            allow="autoplay; fullscreen"
+          />
+        </div>
       )}
 
       {/* Gradient overlay */}
