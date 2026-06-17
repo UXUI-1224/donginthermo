@@ -1,86 +1,17 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react' // useRef used by ImageUploadSlot
 
 type Settings = Record<string, string>
 
 // ── Reusable upload components ────────────────────────────────────────────────
 
-function VideoUploadSlot({
-  label,
-  description,
-  settingKey,
-  value,
-  onChange,
-}: {
-  label: string
-  description?: string
-  settingKey: string
-  value: string
-  onChange: (url: string) => void
-}) {
-  const [uploading, setUploading] = useState(false)
-  const [error, setError] = useState('')
-  const fileRef = useRef<HTMLInputElement>(null)
-
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setUploading(true)
-    setError('')
-    try {
-      const fd = new FormData()
-      fd.append('file', file)
-      fd.append('key', settingKey)
-      const res = await fetch('/api/admin/settings/upload', { method: 'POST', body: fd })
-      if (!res.ok) throw new Error((await res.json()).error)
-      const { url } = await res.json()
-      onChange(url)
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Upload failed.')
-    } finally {
-      setUploading(false)
-      if (fileRef.current) fileRef.current.value = ''
-    }
-  }
-
-  return (
-    <div>
-      <h2 className="text-sm font-semibold text-gray-700 mb-1">{label}</h2>
-      {description && <p className="text-xs text-gray-400 mb-4">{description}</p>}
-
-      {value && (
-        <div className="mb-4 rounded-lg overflow-hidden aspect-video bg-black">
-          <video src={value} className="w-full h-full object-cover" muted controls />
-        </div>
-      )}
-
-      <input ref={fileRef} type="file" accept="video/*" className="hidden" onChange={handleUpload} />
-      <button
-        onClick={() => fileRef.current?.click()}
-        disabled={uploading}
-        className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-200 rounded-lg text-sm text-gray-500 hover:border-[#016cab] hover:text-[#016cab] transition-all disabled:opacity-50"
-      >
-        {uploading ? (
-          <svg className="w-4 h-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-          </svg>
-        ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-          </svg>
-        )}
-        {uploading ? 'Uploading...' : value ? 'Replace video' : 'Upload video'}
-      </button>
-      {error && <p className="text-xs text-red-500 mt-2">{error}</p>}
-      <p className="text-xs text-gray-400 mt-2">Recommended: MP4, under 50 MB</p>
-    </div>
-  )
-}
 
 const VIMEO_EMBED_URL = (id: string) =>
   `https://player.vimeo.com/video/${id}?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&muted=1&loop=1&controls=0`
+
+const VIMEO_BG_URL = (id: string) =>
+  `https://player.vimeo.com/video/${id}?background=1&autoplay=1&loop=1&muted=1`
 
 function VideoEmbedSlot({
   label,
@@ -88,12 +19,14 @@ function VideoEmbedSlot({
   settingKey,
   value,
   onChange,
+  embedUrlFn = VIMEO_EMBED_URL,
 }: {
   label: string
   description?: string
   settingKey: string
   value: string
   onChange: (url: string) => void
+  embedUrlFn?: (id: string) => string
 }) {
   // Extract video ID from stored URL if already saved
   const savedId = value.match(/vimeo\.com\/video\/(\d+)/)?.[1] ?? ''
@@ -104,7 +37,7 @@ function VideoEmbedSlot({
 
   const handleSave = async () => {
     if (!videoId.trim()) return
-    const embedUrl = VIMEO_EMBED_URL(videoId.trim())
+    const embedUrl = embedUrlFn(videoId.trim())
     setSaving(true)
     setError('')
     try {
@@ -288,12 +221,13 @@ export default function DesignsPage() {
 
       {/* Hero Video */}
       <div className="bg-white border border-gray-100 rounded-xl p-6">
-        <VideoUploadSlot
+        <VideoEmbedSlot
           label="Hero Video"
-          description="Full-screen background video on the homepage hero section."
+          description="Homepage hero section background video."
           settingKey="hero_video_url"
           value={settings.hero_video_url ?? ''}
           onChange={update('hero_video_url')}
+          embedUrlFn={VIMEO_BG_URL}
         />
       </div>
 

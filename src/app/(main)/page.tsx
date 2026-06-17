@@ -62,14 +62,14 @@ function HeroSection({ videoUrl }: { videoUrl: string }) {
 
   return (
     <section className="relative h-screen flex items-center overflow-hidden bg-blue-900">
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover opacity-40"
-        src={videoUrl || undefined}
-      />
+      {videoUrl && (
+        <iframe
+          src={videoUrl}
+          className="absolute inset-0 w-full h-full pointer-events-none opacity-40"
+          style={{ border: 'none' }}
+          allow="autoplay; fullscreen"
+        />
+      )}
 
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-900/60 to-transparent" />
