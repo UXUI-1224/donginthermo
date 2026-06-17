@@ -70,10 +70,9 @@ function HeroSection({ videoUrl }: { videoUrl: string }) {
               position: 'absolute',
               top: '50%',
               left: '50%',
-              width: '100vw',
-              height: '56.25vw',   /* 16:9 — wider than tall */
-              minWidth: '177.78vh', /* 16:9 — taller than wide */
-              minHeight: '100vh',
+              /* cover: whichever axis is smaller gets scaled up to fill */
+              width: 'max(100%, calc(100vh * 16 / 9))',
+              height: 'max(100%, calc(100vw * 9 / 16))',
               transform: 'translate(-50%, -50%)',
               border: 'none',
             }}
