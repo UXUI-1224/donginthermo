@@ -79,6 +79,100 @@ function VideoUploadSlot({
   )
 }
 
+// Converts Vimeo/YouTube page URL → embed URL. Returns as-is if already an embed URL.
+function toEmbedUrl(url: string): string {
+  // Vimeo: https://vimeo.com/123456789
+  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/)
+  if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}`
+  // YouTube: watch?v= or youtu.be/
+  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/)
+  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`
+  return url
+}
+
+function VideoEmbedSlot({
+  label,
+  description,
+  settingKey,
+  value,
+  onChange,
+}: {
+  label: string
+  description?: string
+  settingKey: string
+  value: string
+  onChange: (url: string) => void
+}) {
+  const [input, setInput] = useState(value)
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleSave = async () => {
+    const embedUrl = toEmbedUrl(input.trim())
+    setSaving(true)
+    setError('')
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [settingKey]: embedUrl }),
+      })
+      if (!res.ok) throw new Error((await res.json()).error)
+      onChange(embedUrl)
+      setInput(embedUrl)
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to save.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const embedUrl = toEmbedUrl(input.trim())
+  const isEmbed = embedUrl.includes('player.vimeo.com') || embedUrl.includes('youtube.com/embed')
+
+  return (
+    <div>
+      <h2 className="text-sm font-semibold text-gray-700 mb-1">{label}</h2>
+      {description && <p className="text-xs text-gray-400 mb-4">{description}</p>}
+
+      {value && (
+        <div className="mb-4 rounded-lg overflow-hidden aspect-video bg-black">
+          <iframe
+            src={value}
+            className="w-full h-full"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      )}
+
+      <div className="flex gap-2">
+        <input
+          value={input}
+          onChange={(e) => { setInput(e.target.value); setSaved(false) }}
+          placeholder="https://vimeo.com/123456789  or  https://youtu.be/XXXXX"
+          className="flex-1 px-3.5 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 outline-none focus:border-[#016cab] focus:ring-2 focus:ring-[#016cab]/10 transition-all"
+        />
+        <button
+          onClick={handleSave}
+          disabled={saving || !input.trim()}
+          className="px-4 py-2 bg-[#016cab] hover:bg-[#015689] disabled:opacity-50 text-white text-sm font-semibold rounded-lg transition-colors shrink-0"
+        >
+          {saving ? 'Saving...' : saved ? 'Saved!' : 'Save'}
+        </button>
+      </div>
+      {input.trim() && !isEmbed && (
+        <p className="text-xs text-amber-500 mt-1.5">Unrecognized URL — will be saved as-is.</p>
+      )}
+      {error && <p className="text-xs text-red-500 mt-1.5">{error}</p>}
+      <p className="text-xs text-gray-400 mt-2">Vimeo or YouTube URL. Paste the page URL — embed URL is auto-converted.</p>
+    </div>
+  )
+}
+
 function ImageUploadSlot({
   label,
   code,
@@ -214,9 +308,9 @@ export default function DesignsPage() {
 
       {/* CEO Interview Video */}
       <div className="bg-white border border-gray-100 rounded-xl p-6">
-        <VideoUploadSlot
+        <VideoEmbedSlot
           label="CEO Interview"
-          description="Video displayed in the About page CEO section."
+          description="Video displayed in the About page CEO section. Paste a Vimeo or YouTube URL."
           settingKey="ceo_video_url"
           value={settings.ceo_video_url ?? ''}
           onChange={update('ceo_video_url')}
