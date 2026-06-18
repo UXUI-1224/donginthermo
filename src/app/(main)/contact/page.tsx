@@ -235,7 +235,7 @@ function FormSection() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                Name <span className="text-red-400">*</span>
+                Name <span className="text-blue-500">*</span>
               </label>
               <input
                 required
@@ -264,7 +264,7 @@ function FormSection() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                Email <span className="text-red-400">*</span>
+                Email <span className="text-blue-500">*</span>
               </label>
               <input
                 required
@@ -292,7 +292,7 @@ function FormSection() {
           {/* Subject */}
           <div>
             <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-              Subject <span className="text-red-400">*</span>
+              Subject <span className="text-blue-500">*</span>
             </label>
             <div className="relative">
               <select
@@ -317,7 +317,7 @@ function FormSection() {
           {/* Message */}
           <div>
             <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-              Message <span className="text-red-400">*</span>
+              Message <span className="text-blue-500">*</span>
             </label>
             <textarea
               required
@@ -332,7 +332,7 @@ function FormSection() {
           {/* Submit */}
           <div className="flex items-center justify-between pt-2">
             <p className="text-xs text-gray-400">
-              <span className="text-red-400">*</span> Required fields
+              <span className="text-blue-500">*</span> Required fields
             </p>
             <button
               type="submit"
