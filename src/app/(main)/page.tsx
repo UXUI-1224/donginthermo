@@ -378,7 +378,7 @@ function ProductsSection({ categoryImages }: { categoryImages: Record<string, st
             <Link
               key={p.code}
               href={p.href}
-              className={`group relative block rounded-xl overflow-hidden aspect-[3/4] bg-gray-100 transition-all duration-500 ${
+              className={`group relative block rounded-xl overflow-hidden aspect-[3/4] transition-all duration-500 ${
                 gridIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
               }`}
               style={{ transitionDelay: `${i * 80}ms` }}
