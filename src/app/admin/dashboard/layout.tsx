@@ -116,7 +116,7 @@ function Sidebar({ collapsed, onCollapse }: { collapsed: boolean; onCollapse: ()
               {items.map(({ label, href, icon }) => {
                 const active = pathname === href
                 return (
-                  <Link key={href} href={href} className={`flex items-center gap-2.5 px-2 py-2 rounded-md text-sm font-medium transition-colors ${active ? 'bg-blue-50 text-[#016cab]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`} title={collapsed ? label : undefined}>
+                  <Link key={href} href={href} className={`flex items-center gap-2.5 px-2 py-2 rounded-md text-sm font-medium transition-colors ${collapsed ? 'justify-center' : ''} ${active ? 'bg-blue-50 text-[#016cab]' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`} title={collapsed ? label : undefined}>
                     <span className={active ? 'text-[#016cab]' : 'text-gray-400'}>{icon}</span>
                     {!collapsed && <span>{label}</span>}
                   </Link>
