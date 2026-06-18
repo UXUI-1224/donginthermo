@@ -135,7 +135,7 @@ function ContactInfoSection() {
           >
             <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm aspect-[4/3] lg:aspect-auto lg:h-[420px] w-full">
               <iframe
-                src="https://maps.app.goo.gl/cDfRcYmT46qVynMfA"
+                src="https://maps.app.goo.gl/cDfRcYmT46qVynMfA?g_st=ic"
                 className="w-full h-full"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
