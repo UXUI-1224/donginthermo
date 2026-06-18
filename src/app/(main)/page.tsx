@@ -116,16 +116,16 @@ function HeroSection({ videoUrl }: { videoUrl: string }) {
             }`}
           >
             <Link
-              href="/products/van"
+              href="/about"
               className="inline-block bg-blue-500 hover:bg-blue-400 active:scale-95 text-white font-medium text-sm tracking-wide px-7 py-3.5 transition-all duration-200"
             >
-              View Products
+              About Us
             </Link>
             <Link
-              href="/about"
+              href="/products/van"
               className="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm font-medium transition-colors group"
             >
-              About Us
+              View Products
               <svg
                 className="w-4 h-4 transition-transform group-hover:translate-x-1"
                 fill="none"
