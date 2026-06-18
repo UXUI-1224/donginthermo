@@ -130,6 +130,13 @@ export default function GNB() {
                 </div>
               </div>
 
+              {/* Contact */}
+              <Link
+                href="/contact"
+                className="text-sm font-medium tracking-wide text-gray-600 hover:text-blue-600">
+                Contact
+              </Link>
+
             </nav>
 
             {/* Mobile hamburger button */}
@@ -218,6 +225,14 @@ export default function GNB() {
                 </div>
               )}
             </div>
+
+            {/* Contact */}
+            <Link
+              href="/contact"
+              className="py-4 text-sm font-medium text-gray-800 hover:text-blue-600 transition-colors"
+            >
+              Contact
+            </Link>
           </nav>
         </div>
       </div>
