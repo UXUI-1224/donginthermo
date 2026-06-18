@@ -340,10 +340,10 @@ export default function ProductsPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3 w-24">Category</th>
-                <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3">Image / Name</th>
+                <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 sm:px-5 py-3 w-16 sm:w-24">Category</th>
+                <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 sm:px-5 py-3">Image / Name</th>
                 <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3 hidden md:table-cell">Tagline</th>
-                <th className="px-5 py-3 w-16"></th>
+                <th className="px-3 sm:px-5 py-3 w-14 sm:w-16"></th>
               </tr>
             </thead>
             <tbody>
@@ -361,14 +361,14 @@ export default function ProductsPage() {
                     .sort((a, b) => a.sort_order - b.sort_order)[0]
                   return (
                     <tr key={product.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
-                      <td className="px-5 py-3">
-                        <span className="inline-block px-2 py-0.5 bg-blue-50 text-[#016cab] text-xs font-semibold rounded-full">
+                      <td className="px-3 sm:px-5 py-3">
+                        <span className="inline-block px-1.5 sm:px-2 py-0.5 bg-blue-50 text-[#016cab] text-xs font-semibold rounded-full">
                           {CATEGORY_LABELS[product.category] ?? product.category.toUpperCase()}
                         </span>
                       </td>
-                      <td className="px-5 py-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-14 h-10 rounded-md overflow-hidden border border-gray-100 bg-gray-50 shrink-0">
+                      <td className="px-3 sm:px-5 py-3">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="w-10 h-7 sm:w-14 sm:h-10 rounded-md overflow-hidden border border-gray-100 bg-gray-50 shrink-0">
                             {thumb ? (
                               // eslint-disable-next-line @next/next/no-img-element
                               <img src={thumb.img_url} alt={thumb.alt ?? ''} className="w-full h-full object-cover" />
@@ -386,10 +386,10 @@ export default function ProductsPage() {
                       <td className="px-5 py-3 hidden md:table-cell">
                         <span className="text-gray-500 line-clamp-1">{product.tagline}</span>
                       </td>
-                      <td className="px-5 py-3 text-right">
+                      <td className="px-3 sm:px-5 py-3 text-right">
                         <button
                           onClick={() => setEditing(product)}
-                          className="px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg hover:border-[#016cab] hover:text-[#016cab] transition-all"
+                          className="px-2 sm:px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg hover:border-[#016cab] hover:text-[#016cab] transition-all"
                         >
                           Edit
                         </button>
