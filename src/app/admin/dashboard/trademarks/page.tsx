@@ -396,7 +396,7 @@ export default function TrademarksPage() {
                             </svg>
                           )}
                         </div>
-                        <span className="font-medium text-gray-800 text-xs">{tm.name}</span>
+                        <span className="md:text-sm text-xs font-medium text-gray-800">{tm.name}</span>
                       </div>
                     </td>
                     <td className="hidden sm:table-cell px-5 py-3">

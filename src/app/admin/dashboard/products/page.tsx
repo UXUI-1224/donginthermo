@@ -380,7 +380,7 @@ export default function ProductsPage() {
                               </div>
                             )}
                           </div>
-                          <span className="font-medium text-gray-800">{product.name}</span>
+                          <span className="md:text-sm text-xs text-gray-800">{product.name}</span>
                         </div>
                       </td>
                       <td className="px-5 py-3 hidden md:table-cell">
@@ -389,7 +389,7 @@ export default function ProductsPage() {
                       <td className="px-3 sm:px-5 py-3 text-right">
                         <button
                           onClick={() => setEditing(product)}
-                          className="px-2 sm:px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg hover:border-[#016cab] hover:text-[#016cab] transition-all"
+                          className="px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg hover:border-[#016cab] hover:text-[#016cab] transition-all"
                         >
                           Edit
                         </button>

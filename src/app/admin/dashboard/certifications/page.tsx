@@ -293,7 +293,7 @@ export default function CertificationsPage() {
                             </svg>
                           )}
                         </div>
-                        <span className="font-medium text-gray-800 whitespace-pre-line text-xs leading-snug">{cert.name}</span>
+                        <span className="font-medium text-gray-800 whitespace-pre-line md:text-sm text-xs leading-snug">{cert.name}</span>
                       </div>
                     </td>
                     <td className="px-5 py-3 text-right">
