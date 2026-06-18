@@ -79,13 +79,12 @@ export default function GNB() {
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
-            <Link
-              href="/"
-              className={`font-bold text-sm tracking-[0.2em] transition-colors ${
-                transparent ? 'text-white' : 'text-blue-900'
-              }`}
-            >
-              DONGINTHERMO
+            <Link href="/" className="flex items-center">
+              <img
+                src={transparent ? '/logo-배경-투명화.png' : '/logo.png'}
+                alt="Donginthermo"
+                className="h-8 lg:h-9 w-auto object-contain"
+              />
             </Link>
 
             {/* Desktop Nav */}
