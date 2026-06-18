@@ -92,7 +92,7 @@ export default function CertGrid({ certifications }: { certifications: CertRow[]
             </h2>
           </div>
 
-          <div ref={gridRef} className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {certifications.map((cert, i) => (
               <CertCard
                 key={cert.id}

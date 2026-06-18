@@ -362,7 +362,7 @@ export default function TrademarksPage() {
             <thead>
               <tr className="border-b border-gray-100">
                 <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3">Image / Country</th>
-                <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3 w-52">Coordinates</th>
+                <th className="hidden sm:table-cell text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3 w-52">Coordinates</th>
                 <th className="px-5 py-3 w-16"></th>
               </tr>
             </thead>
@@ -399,7 +399,7 @@ export default function TrademarksPage() {
                         <span className="font-medium text-gray-800 text-xs">{tm.name}</span>
                       </div>
                     </td>
-                    <td className="px-5 py-3">
+                    <td className="hidden sm:table-cell px-5 py-3">
                       <span className="text-xs text-gray-500 font-mono">
                         {tm.lat.toFixed(3)}, {tm.lon.toFixed(3)}
                       </span>

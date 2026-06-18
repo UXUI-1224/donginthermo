@@ -151,7 +151,7 @@ function HistoryGroup({
   const { ref, inView } = useInView({ threshold: 0.1 })
 
   return (
-    <div ref={ref} className="grid grid-cols-[100px_1fr] md:grid-cols-[140px_1fr] gap-0">
+    <div ref={ref} className="grid grid-cols-[80px_1fr] sm:grid-cols-[100px_1fr] md:grid-cols-[140px_1fr] gap-0">
       {/* Decade label */}
       <div className="pt-1">
         <span className={`text-blue-500 text-sm font-bold tracking-wide transition-all duration-500 ${inView ? 'opacity-100' : 'opacity-0'}`}>
@@ -215,7 +215,7 @@ function HistorySection() {
           {/* Founding entry */}
           <div
             ref={foundedRef}
-            className={`grid grid-cols-[100px_1fr] md:grid-cols-[140px_1fr] gap-0 transition-all duration-700 ${
+            className={`grid grid-cols-[80px_1fr] sm:grid-cols-[100px_1fr] md:grid-cols-[140px_1fr] gap-0 transition-all duration-700 ${
               foundedIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}
           >
@@ -278,7 +278,7 @@ function ValuesSection({ images }: { images: Record<string, string> }) {
           </h2>
         </div>
 
-        <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {VALUES_BASE.map((v, i) => {
             const imgUrl = images[v.settingKey] ?? ''
             return (

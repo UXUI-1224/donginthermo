@@ -190,7 +190,7 @@ function CompanySection() {
             {companyStats.map((stat, i) => (
               <div
                 key={stat.label}
-                className={`bg-blue-50 p-8 rounded-lg transition-all duration-500 ${
+                className={`bg-blue-50 p-6 sm:p-8 rounded-lg transition-all duration-500 ${
                   statsIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
                 style={{ transitionDelay: statsIn ? `${i * 80}ms` : '0ms' }}
@@ -329,7 +329,7 @@ function IPSection() {
             {ipItems.map((item, i) => (
               <div
                 key={item.label}
-                className={`bg-white/10 border border-white/10 rounded-lg p-8 hover:bg-white/20 transition-all duration-500 ${
+                className={`bg-white/10 border border-white/10 rounded-lg p-6 sm:p-8 hover:bg-white/20 transition-all duration-500 ${
                   gridIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
                 style={{ transitionDelay: `${i * 80}ms` }}

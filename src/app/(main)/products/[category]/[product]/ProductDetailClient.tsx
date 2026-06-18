@@ -133,23 +133,23 @@ export default function ProductDetailClient({
                 <p className="text-gray-400 text-sm mb-8">{product.performanceNote}</p>
               )}
 
-              <div className="rounded-xl border border-gray-100 overflow-hidden">
-                <table className="w-full text-sm">
+              <div className="rounded-xl border border-gray-100 overflow-hidden overflow-x-auto">
+                <table className="w-full text-xs sm:text-sm">
                   <thead>
                     <tr className="bg-blue-600 text-white">
-                      <th className="px-5 py-3.5 text-left font-semibold">Cargo Temp.</th>
-                      {hasMode && <th className="px-5 py-3.5 text-left font-semibold">Mode</th>}
-                      <th className="px-5 py-3.5 text-right font-semibold">Watts</th>
-                      <th className="px-5 py-3.5 text-right font-semibold">kcal/h</th>
-                      <th className="px-5 py-3.5 text-right font-semibold">BTU/h</th>
+                      <th className="px-3 sm:px-5 py-3 sm:py-3.5 text-left font-semibold">Cargo Temp.</th>
+                      {hasMode && <th className="px-3 sm:px-5 py-3 sm:py-3.5 text-left font-semibold">Mode</th>}
+                      <th className="px-3 sm:px-5 py-3 sm:py-3.5 text-right font-semibold">Watts</th>
+                      <th className="px-3 sm:px-5 py-3 sm:py-3.5 text-right font-semibold">kcal/h</th>
+                      <th className="px-3 sm:px-5 py-3 sm:py-3.5 text-right font-semibold">BTU/h</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {product.performance.map((row, i) => (
                       <tr key={i} className="bg-white hover:bg-blue-50 transition-colors">
-                        <td className="px-5 py-3.5 font-medium text-gray-900">{row.temp}</td>
+                        <td className="px-3 sm:px-5 py-3 sm:py-3.5 font-medium text-gray-900">{row.temp}</td>
                         {hasMode && (
-                          <td className="px-5 py-3.5 text-gray-500">
+                          <td className="px-3 sm:px-5 py-3 sm:py-3.5 text-gray-500">
                             {row.mode && (
                               <span className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${
                                 row.mode === 'ESC'
@@ -161,9 +161,9 @@ export default function ProductDetailClient({
                             )}
                           </td>
                         )}
-                        <td className="px-5 py-3.5 text-right text-gray-700">{row.watts}</td>
-                        <td className="px-5 py-3.5 text-right text-gray-700">{row.kcal}</td>
-                        <td className="px-5 py-3.5 text-right text-gray-700">{row.btu}</td>
+                        <td className="px-3 sm:px-5 py-3 sm:py-3.5 text-right text-gray-700">{row.watts}</td>
+                        <td className="px-3 sm:px-5 py-3 sm:py-3.5 text-right text-gray-700">{row.kcal}</td>
+                        <td className="px-3 sm:px-5 py-3 sm:py-3.5 text-right text-gray-700">{row.btu}</td>
                       </tr>
                     ))}
                   </tbody>

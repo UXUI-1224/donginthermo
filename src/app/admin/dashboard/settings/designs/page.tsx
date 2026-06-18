@@ -246,7 +246,7 @@ export default function DesignsPage() {
       <div className="bg-white border border-gray-100 rounded-xl p-6">
         <h2 className="text-sm font-semibold text-gray-700 mb-1">Product Category Images</h2>
         <p className="text-xs text-gray-400 mb-4">Images on the homepage product section cards.</p>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {CATEGORY_KEYS.map(({ key, label, code }) => (
             <ImageUploadSlot
               key={key}
@@ -264,7 +264,7 @@ export default function DesignsPage() {
       <div className="bg-white border border-gray-100 rounded-xl p-6">
         <h2 className="text-sm font-semibold text-gray-700 mb-1">Management Philosophy Images</h2>
         <p className="text-xs text-gray-400 mb-4">Images on the About page management philosophy cards.</p>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {VALUES_KEYS.map(({ key, label }) => (
             <ImageUploadSlot
               key={key}

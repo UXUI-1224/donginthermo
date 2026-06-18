@@ -19,7 +19,7 @@ export default async function Footer() {
   return (
     <footer className="bg-blue-900 text-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-10 py-16 lg:py-20">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
           {/* Brand */}
           <div className="md:col-span-1">
             <p className="font-bold text-sm tracking-[0.2em] mb-4">DONGINTHERMO</p>

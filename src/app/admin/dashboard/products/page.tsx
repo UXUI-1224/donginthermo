@@ -219,7 +219,7 @@ function EditModal({
             {images.length === 0 && (
               <p className="text-sm text-gray-400 mb-3">No images yet.</p>
             )}
-            <div className="grid grid-cols-3 gap-2 mb-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
               {images.map((img) => (
                 <div key={img.id} className="relative group aspect-video rounded-lg overflow-hidden border border-gray-100 bg-gray-50">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
