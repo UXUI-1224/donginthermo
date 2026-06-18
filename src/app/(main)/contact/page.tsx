@@ -163,8 +163,7 @@ const SUBJECT_OPTIONS = [
 ]
 
 function FormSection() {
-  const { ref: headRef, inView: headIn } = useInView()
-  const { ref: formRef, inView: formIn } = useInView()
+  const { ref: sectionRef, inView: sectionIn } = useInView({ threshold: 0.1 })
 
   const [form, setForm] = useState({
     name: '',
@@ -195,29 +194,43 @@ function FormSection() {
 
   return (
     <section className="py-28 bg-gray-50">
-      <div className="max-w-3xl mx-auto px-6 lg:px-10">
+      <div
+        ref={sectionRef}
+        className="max-w-7xl mx-auto px-6 lg:px-10"
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-20 items-start">
 
-        <div
-          ref={headRef}
-          className={`mb-12 transition-all duration-700 ${
-            headIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-          }`}
-        >
-          <p className="text-blue-500 text-xs font-semibold tracking-[0.25em] uppercase mb-4">
-            Send a Message
-          </p>
-          <h2 className="text-gray-900 text-3xl md:text-4xl font-bold">
-            How Can We Help You?
-          </h2>
-        </div>
+          {/* Left: Text */}
+          <div
+            className={`lg:col-span-2 transition-all duration-700 ${
+              sectionIn ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
+            }`}
+          >
+            <p className="text-blue-500 text-xs font-semibold tracking-[0.25em] uppercase mb-4">
+              Send a Message
+            </p>
+            <h2 className="text-gray-900 text-3xl md:text-4xl font-bold leading-snug mb-8">
+              How Can We
+              <br />
+              Help You?
+            </h2>
+            <div className="flex flex-col gap-5 text-sm text-gray-500 leading-relaxed">
+              <p>
+                Whether you have a question about our products, need technical support, or are exploring partnership opportunities — our team is here to help.
+              </p>
+              <p>
+                We typically respond within one business day.
+              </p>
+            </div>
+          </div>
 
-        <form
-          ref={formRef}
-          onSubmit={handleSubmit}
-          className={`flex flex-col gap-4 transition-all duration-700 delay-100 ${
-            formIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
-        >
+          {/* Right: Form */}
+          <form
+            onSubmit={handleSubmit}
+            className={`lg:col-span-3 flex flex-col gap-4 transition-all duration-700 delay-150 ${
+              sectionIn ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
+            }`}
+          >
           {/* Name + Company */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -281,17 +294,24 @@ function FormSection() {
             <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
               Subject <span className="text-red-400">*</span>
             </label>
-            <select
-              required
-              value={form.subject}
-              onChange={set('subject')}
-              className={`${inputCls} cursor-pointer`}
-            >
-              <option value="" disabled>Select a topic</option>
-              {SUBJECT_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>{opt}</option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                required
+                value={form.subject}
+                onChange={set('subject')}
+                className={`${inputCls} appearance-none pr-10 cursor-pointer`}
+              >
+                <option value="" disabled>Select a topic</option>
+                {SUBJECT_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
           </div>
 
           {/* Message */}
@@ -337,8 +357,9 @@ function FormSection() {
               )}
             </button>
           </div>
-        </form>
+          </form>
 
+        </div>
       </div>
     </section>
   )
