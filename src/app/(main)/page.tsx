@@ -72,7 +72,7 @@ function HeroSection({ videoUrl }: { videoUrl: string }) {
               left: '50%',
               width: 'max(100%, calc(100vh * 16 / 9))',                                                            
               height: 'max(100%, calc(100vw * 9 / 16))',                                                           
-              transform: 'translate(-50%, -50%) scale(1.4)',
+              transform: 'translate(-50%, -50%) scale(1.4)', // Scale up to cover letterboxing on wider screens
               border: 'none',
             }}
             allow="autoplay; fullscreen"
@@ -82,7 +82,7 @@ function HeroSection({ videoUrl }: { videoUrl: string }) {
 
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-900/60 to-transparent" />
-
+      
       {/* Content — entrance animation on mount */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 w-full">
         <div className="max-w-xl">
