@@ -85,14 +85,6 @@ function HeroSection({ videoUrl }: { videoUrl: string }) {
       
       {/* Content — entrance animation on mount */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 w-full">
-        <div className="max-w-xl">
-          <p
-            className={`text-blue-300 text-xs font-semibold tracking-[0.25em] uppercase mb-6 transition-all duration-700 delay-100 ${
-              loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`}
-          >
-            Transport Refrigeration Technology
-          </p>
           <h1
             className={`text-white text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 transition-all duration-700 delay-200 ${
               loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
@@ -123,7 +115,6 @@ function HeroSection({ videoUrl }: { videoUrl: string }) {
             </Link>
           </div>
         </div>
-      </div>
 
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40">
@@ -161,9 +152,6 @@ function CompanySection() {
               textIn ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
             }`}
           >
-            <p className="text-blue-500 text-xs font-semibold tracking-[0.2em] uppercase mb-4">
-              About Donginthermo
-            </p>
             <h2 className="text-gray-900 text-3xl md:text-4xl font-bold leading-tight mb-6">
               A Specialist in
               <br />
@@ -260,13 +248,10 @@ function HistorySection() {
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div
           ref={headRef}
-          className={`mb-16 transition-all duration-700 ${
+          className={`mb-8 transition-all duration-700 ${
             headIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
-          <p className="text-blue-500 text-xs font-semibold tracking-[0.2em] uppercase mb-4">
-            Company History
-          </p>
           <h2 className="text-gray-900 text-3xl md:text-4xl font-bold">Our Journey</h2>
         </div>
 
@@ -306,9 +291,6 @@ function IPSection() {
               textIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
-            <p className="text-blue-200 text-xs font-semibold tracking-[0.2em] uppercase mb-4">
-              Intellectual Property
-            </p>
             <h2 className="text-white text-3xl md:text-4xl font-bold leading-tight mb-6">
               Technology
               <br />
@@ -366,16 +348,13 @@ function ProductsSection({ categoryImages }: { categoryImages: Record<string, st
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div
           ref={headRef}
-          className={`flex items-end justify-between mb-16 transition-all duration-700 ${
+          className={`flex items-end justify-between mb-8 transition-all duration-700 ${
             headIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
           <div>
-            <p className="text-blue-500 text-xs font-semibold tracking-[0.2em] uppercase mb-4">
-              Our Products
-            </p>
             <h2 className="text-gray-900 text-3xl md:text-4xl font-bold">
-              Solutions by Category
+              Our Solutions & Products
             </h2>
           </div>
           <Link
@@ -416,20 +395,15 @@ function ProductsSection({ categoryImages }: { categoryImages: Record<string, st
               )}
 
               {/* Dim overlay */}
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/55 transition-colors duration-300" />
+              <div className="absolute inset-0 bg-black/10 group-hover:bg-white/0 transition-colors duration-300" />
 
               {/* Content */}
-              <div className="absolute inset-0 flex flex-col justify-between p-7">
-                {/* Category badge */}
-                <span className="self-start bg-white/20 backdrop-blur-sm text-white text-[10px] font-bold tracking-[0.15em] uppercase px-3 py-1.5 rounded-full">
-                  {p.code}
-                </span>
-
+              <div className="absolute inset-0 flex flex-col justify-end p-7">
                 {/* Title + arrow */}
-                <div className="flex items-end justify-between">
-                  <p className="text-white text-xl font-bold leading-tight">{p.title}</p>
-                  <div className="w-9 h-9 rounded-full bg-white/20 group-hover:bg-white/30 flex items-center justify-center transition-colors duration-300 shrink-0 ml-3">
-                    <svg className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <div className="flex items-center justify-between">
+                  <p className="text-black group-hover:text-blue-600 text-xl font-bold leading-tight">{p.title}</p>
+                  <div className="w-8 h-8 rounded-full bg-black/10 group-hover:bg-blue-600 group-hover:translate-x-1 transition-transform duration-200 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
@@ -463,9 +437,6 @@ function CTASection() {
           <div className="pointer-events-none absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-blue-400/20 blur-3xl" />
 
           <div className="relative z-10">
-            <p className="text-blue-500 text-xs font-semibold tracking-[0.25em] uppercase mb-4">
-              Get Started
-            </p>
             <h2 className="text-blue-900 text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4">
               Ready to upgrade
               <br />
