@@ -120,13 +120,35 @@ function ImageUploadSlot({
     setUploading(true)
     setError('')
     try {
-      const fd = new FormData()
-      fd.append('file', file)
-      fd.append('key', settingKey)
-      const res = await fetch('/api/admin/settings/upload', { method: 'POST', body: fd })
-      if (!res.ok) throw new Error((await res.json()).error)
-      const { url } = await res.json()
-      onChange(url)
+      const ext = file.name.split('.').pop()
+      const path = `${settingKey}-${Date.now()}.${ext}`
+
+      // 1. Get presigned URL
+      const signRes = await fetch('/api/admin/sign-upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bucket: 'site-assets', path }),
+      })
+      if (!signRes.ok) throw new Error((await signRes.json()).error)
+      const { signedUrl, publicUrl } = await signRes.json()
+
+      // 2. Upload directly to Supabase (no Vercel size limit)
+      const uploadRes = await fetch(signedUrl, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': file.type },
+      })
+      if (!uploadRes.ok) throw new Error('Storage upload failed')
+
+      // 3. Save URL to settings
+      const saveRes = await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [settingKey]: publicUrl }),
+      })
+      if (!saveRes.ok) throw new Error((await saveRes.json()).error)
+
+      onChange(publicUrl)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Upload failed.')
     } finally {

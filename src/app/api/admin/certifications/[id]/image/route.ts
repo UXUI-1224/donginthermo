@@ -6,11 +6,10 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
-  const formData = await req.formData()
-  const file = formData.get('file') as File | null
-  if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+  const { url } = await req.json()
+  if (!url) return NextResponse.json({ error: 'No URL provided' }, { status: 400 })
 
-  // Remove old image if exists
+  // Remove old image from storage if exists
   const { data: cert } = await supabaseAdmin
     .from('certifications')
     .select('img_url')
@@ -18,25 +17,16 @@ export async function POST(
     .single()
 
   if (cert?.img_url) {
-    const url = new URL(cert.img_url)
-    const pathParts = url.pathname.split('/cert-images/')
-    if (pathParts[1]) {
-      await supabaseAdmin.storage.from('cert-images').remove([pathParts[1]])
-    }
+    try {
+      const oldUrl = new URL(cert.img_url.split('?')[0])
+      const pathParts = oldUrl.pathname.split('/cert-images/')
+      if (pathParts[1]) {
+        await supabaseAdmin.storage.from('cert-images').remove([pathParts[1]])
+      }
+    } catch { /* ignore */ }
   }
 
-  const ext = file.name.split('.').pop()
-  const path = `${id}.${ext}`
-  const buffer = new Uint8Array(await file.arrayBuffer())
-
-  const { error: uploadError } = await supabaseAdmin.storage
-    .from('cert-images')
-    .upload(path, buffer, { contentType: file.type, upsert: true })
-
-  if (uploadError) return NextResponse.json({ error: uploadError.message }, { status: 500 })
-
-  const { data: urlData } = supabaseAdmin.storage.from('cert-images').getPublicUrl(path)
-  const freshUrl = `${urlData.publicUrl}?t=${Date.now()}`
+  const freshUrl = `${url}?t=${Date.now()}`
 
   const { error: dbError } = await supabaseAdmin
     .from('certifications')
@@ -61,11 +51,13 @@ export async function DELETE(
     .single()
 
   if (cert?.img_url) {
-    const url = new URL(cert.img_url)
-    const pathParts = url.pathname.split('/cert-images/')
-    if (pathParts[1]) {
-      await supabaseAdmin.storage.from('cert-images').remove([pathParts[1]])
-    }
+    try {
+      const url = new URL(cert.img_url.split('?')[0])
+      const pathParts = url.pathname.split('/cert-images/')
+      if (pathParts[1]) {
+        await supabaseAdmin.storage.from('cert-images').remove([pathParts[1]])
+      }
+    } catch { /* ignore */ }
   }
 
   const { error } = await supabaseAdmin

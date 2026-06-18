@@ -30,20 +30,12 @@ function DropdownChevron({ open }: { open: boolean }) {
 }
 
 export default function GNB() {
-  const [scrolled, setScrolled] = useState(false)
   const [techOpen, setTechOpen] = useState(false)
   const [productsOpen, setProductsOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileTechOpen, setMobileTechOpen] = useState(false)
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false)
   const pathname = usePathname()
-  const isHome = pathname === '/'
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -59,7 +51,7 @@ export default function GNB() {
   const btnCls = 'flex items-center gap-1 text-sm font-medium tracking-wide text-gray-600 hover:text-blue-600'
 
   const dropdownCls = (open: boolean) =>
-    `absolute top-full right-0 pt-2 min-w-[200px] transition-all duration-200 origin-top ${
+    `absolute top-full left-0 pt-4 min-w-[200px] transition-all duration-200 origin-top ${
       open ? 'opacity-100 scale-y-100 pointer-events-auto' : 'opacity-0 scale-y-95 pointer-events-none'
     }`
 

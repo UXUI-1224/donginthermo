@@ -86,14 +86,34 @@ function EditModal({
     setUploading(true)
     setError('')
     try {
-      const fd = new FormData()
-      fd.append('file', file)
-      const res = await fetch(`/api/admin/products/${product.id}/images`, {
+      const ext = file.name.split('.').pop()
+      const path = `${product.id}/${Date.now()}.${ext}`
+
+      // 1. Get presigned URL
+      const signRes = await fetch('/api/admin/sign-upload', {
         method: 'POST',
-        body: fd,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bucket: 'product-images', path }),
       })
-      if (!res.ok) throw new Error((await res.json()).error)
-      const newImg: ProductImage = await res.json()
+      if (!signRes.ok) throw new Error((await signRes.json()).error)
+      const { signedUrl, publicUrl } = await signRes.json()
+
+      // 2. Upload directly to Supabase
+      const uploadRes = await fetch(signedUrl, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': file.type },
+      })
+      if (!uploadRes.ok) throw new Error('Storage upload failed')
+
+      // 3. Save image record to DB
+      const saveRes = await fetch(`/api/admin/products/${product.id}/images`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: publicUrl }),
+      })
+      if (!saveRes.ok) throw new Error((await saveRes.json()).error)
+      const newImg: ProductImage = await saveRes.json()
       setImages((prev) => [...prev, newImg])
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Upload failed.')

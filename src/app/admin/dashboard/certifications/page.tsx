@@ -65,11 +65,28 @@ function EditModal({
     setUploading(true)
     setError('')
     try {
-      const fd = new FormData()
-      fd.append('file', file)
+      const ext = file.name.split('.').pop()
+      const path = `${cert.id}.${ext}`
+
+      const signRes = await fetch('/api/admin/sign-upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bucket: 'cert-images', path }),
+      })
+      if (!signRes.ok) throw new Error((await signRes.json()).error)
+      const { signedUrl, publicUrl } = await signRes.json()
+
+      const uploadRes = await fetch(signedUrl, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': file.type },
+      })
+      if (!uploadRes.ok) throw new Error('Storage upload failed')
+
       const res = await fetch(`/api/admin/certifications/${cert.id}/image`, {
         method: 'POST',
-        body: fd,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: publicUrl }),
       })
       if (!res.ok) throw new Error((await res.json()).error)
       const { img_url } = await res.json()
