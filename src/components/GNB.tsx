@@ -73,7 +73,7 @@ export default function GNB() {
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
           transparent
             ? 'bg-transparent'
-            : 'bg-white backdrop-blur-sm border-b border-gray-100'
+            : 'bg-white border-b border-gray-100'
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-10">

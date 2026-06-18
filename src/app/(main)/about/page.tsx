@@ -26,12 +26,6 @@ function PageHero() {
 // ---------------------------------------------------------------------------
 // CEO Interview Section
 // ---------------------------------------------------------------------------
-// VIDEO PLACEHOLDER
-// To replace with real CEO interview video:
-//   1. Supabase Dashboard → Storage → bucket (e.g. "assets", Public)
-//   2. Upload the video file
-//   3. Copy the public URL and add to src="" below
-// ---------------------------------------------------------------------------
 function CEOSection({ videoUrl }: { videoUrl: string }) {
   const { ref: videoRef, inView: videoIn } = useInView()
   const { ref: textRef, inView: textIn } = useInView()
