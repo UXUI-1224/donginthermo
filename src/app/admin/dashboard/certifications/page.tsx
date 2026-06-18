@@ -268,7 +268,6 @@ export default function CertificationsPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3 w-28">Category</th>
                 <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3">Image / Name</th>
                 <th className="px-5 py-3 w-16"></th>
               </tr>
@@ -281,11 +280,7 @@ export default function CertificationsPage() {
               ) : (
                 certs.map((cert) => (
                   <tr key={cert.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
-                    <td className="px-5 py-3">
-                      <span className={`inline-block px-2 py-0.5 text-xs font-semibold rounded-full ${CATEGORY_COLORS[cert.category] ?? 'bg-gray-100 text-gray-600'}`}>
-                        {cert.category}
-                      </span>
-                    </td>
+                    
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-14 rounded border border-gray-100 bg-gray-50 overflow-hidden shrink-0 flex items-center justify-center">

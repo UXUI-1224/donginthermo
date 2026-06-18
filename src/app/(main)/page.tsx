@@ -333,10 +333,10 @@ function IPSection() {
 // Products Section
 // ---------------------------------------------------------------------------
 const PRODUCT_CATEGORIES = [
-  { code: 'VAN',  href: '/products/van',  title: 'Van Type',  settingKey: 'product_van_img_url' },
-  { code: 'NOSE', href: '/products/nose', title: 'Nose Type', settingKey: 'product_nose_img_url' },
-  { code: 'ESC',  href: '/products/esc',  title: 'ESC Type',  settingKey: 'product_esc_img_url' },
-  { code: 'SUB',  href: '/products/sub',  title: 'Sub Type',  settingKey: 'product_sub_img_url' },
+  { code: 'VAN',  href: '/products/van',  title: 'Van Type',  settingKey: 'product_van_img_url',  tx: '3%',  ty: '-2%' },
+  { code: 'NOSE', href: '/products/nose', title: 'Nose Type', settingKey: 'product_nose_img_url', tx: '-2%', ty: '0px' },
+  { code: 'ESC',  href: '/products/esc',  title: 'ESC Type',  settingKey: 'product_esc_img_url',  tx: '3%',   ty: '-1%' },
+  { code: 'SUB',  href: '/products/sub',  title: 'Sub Type',  settingKey: 'product_sub_img_url',  tx: '2%',  ty: '0px' },
 ]
 
 function ProductsSection({ categoryImages }: { categoryImages: Record<string, string> }) {
@@ -385,11 +385,14 @@ function ProductsSection({ categoryImages }: { categoryImages: Record<string, st
             >
               {/* Background image */}
               {imgUrl ? (
-                <img
-                  src={imgUrl}
-                  alt={p.title}
-                  className="absolute inset-0 w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
-                />
+                <div className="absolute inset-0 scale-160 group-hover:scale-180 transition-transform duration-500">
+                  <img
+                    src={imgUrl}
+                    alt={p.title}
+                    className="w-full h-full object-contain p-4"
+                    style={{ transform: `translateX(${p.tx}) translateY(${p.ty})` }}
+                  />
+                </div>
               ) : (
                 <div className="absolute inset-0 bg-blue-900" />
               )}
