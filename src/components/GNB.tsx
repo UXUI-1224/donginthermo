@@ -73,7 +73,7 @@ export default function GNB() {
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
           transparent
             ? 'bg-transparent'
-            : 'bg-white/95 backdrop-blur-sm border-b border-gray-100'
+            : 'bg-white backdrop-blur-sm border-b border-gray-100'
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
@@ -156,8 +156,8 @@ export default function GNB() {
             {/* Mobile hamburger button */}
             <button
               onClick={() => setMobileOpen((v) => !v)}
-              className={`md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 rounded-lg transition-colors ${
-                transparent ? 'text-white' : 'text-gray-700'
+              className={`md:hidden flex flex-col justify-center items-center w-5 h-5 gap-1.5 rounded-lg transition-colors ${
+                transparent ? 'text-white' : 'text-gray-600'
               }`}
               aria-label="Toggle menu"
             >
