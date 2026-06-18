@@ -30,8 +30,8 @@ export default async function Footer() {
 
           {/* Products */}
           <div>
-            <p className="text-xs font-semibold tracking-widest text-blue-400 uppercase mb-5">Products</p>
-            <ul className="space-y-3">
+            <p className="text-xs font-semibold tracking-widest text-blue-400 uppercase mb-2">Products</p>
+            <ul className="space-y-2">
               {[
                 { label: 'VAN',  href: '/products/van' },
                 { label: 'NOSE', href: '/products/nose' },
@@ -49,8 +49,8 @@ export default async function Footer() {
 
           {/* Company */}
           <div>
-            <p className="text-xs font-semibold tracking-widest text-blue-400 uppercase mb-5">Company</p>
-            <ul className="space-y-3">
+            <p className="text-xs font-semibold tracking-widest text-blue-400 uppercase mb-2">Company</p>
+            <ul className="space-y-2">
               {[
                 { label: 'About',      href: '/about' },
                 { label: 'Technology', href: '/technology' },
@@ -66,7 +66,7 @@ export default async function Footer() {
 
           {/* Contact */}
           <div>
-            <p className="text-xs font-semibold tracking-widest text-blue-400 uppercase mb-5">Contact</p>
+            <p className="text-xs font-semibold tracking-widest text-blue-400 uppercase mb-2">Contact</p>
             <address className="not-italic text-blue-300 text-sm space-y-2 leading-relaxed">
               <p>{address}</p>
               <p className="pt-2">{phone}</p>

@@ -56,11 +56,7 @@ export default function GNB() {
     return () => { document.body.style.overflow = '' }
   }, [mobileOpen])
 
-  const transparent = isHome && !scrolled && !mobileOpen
-
-  const btnCls = `flex items-center gap-1 text-sm font-medium tracking-wide transition-colors ${
-    transparent ? 'text-white/80 hover:text-white' : 'text-gray-600 hover:text-blue-600'
-  }`
+  const btnCls = 'flex items-center gap-1 text-sm font-medium tracking-wide text-gray-600 hover:text-blue-600'
 
   const dropdownCls = (open: boolean) =>
     `absolute top-full right-0 pt-2 min-w-[200px] transition-all duration-200 origin-top ${
@@ -70,18 +66,13 @@ export default function GNB() {
   return (
     <>
       <header
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-          transparent
-            ? 'bg-transparent'
-            : 'bg-white border-b border-gray-100'
-        }`}
-      >
+        className="fixed top-0 inset-x-0 z-50 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center">
               <img
-                src={transparent ? '/logo-배경-투명화.png' : '/logo.png'}
+                src={'/logo-배경-투명화.png'}
                 alt="Donginthermo"
                 className="h-8 lg:h-9 w-auto object-contain"
               />
@@ -93,10 +84,7 @@ export default function GNB() {
               {/* About */}
               <Link
                 href="/about"
-                className={`text-sm font-medium tracking-wide transition-colors ${
-                  transparent ? 'text-white/80 hover:text-white' : 'text-gray-600 hover:text-blue-600'
-                }`}
-              >
+                className="text-sm font-medium tracking-wide text-gray-600 hover:text-blue-600">
                 About
               </Link>
 
@@ -155,8 +143,7 @@ export default function GNB() {
             {/* Mobile hamburger button */}
             <button
               onClick={() => setMobileOpen((v) => !v)}
-              className={`md:hidden flex flex-col justify-center items-center w-5 h-5 gap-1.5 rounded-lg transition-colors ${
-                transparent ? 'text-white' : 'text-gray-600'
+              className={`md:hidden flex flex-col justify-center items-center w-5 h-5 gap-1.5 rounded-lg text-gray-600'
               }`}
               aria-label="Toggle menu"
             >
