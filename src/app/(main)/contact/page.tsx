@@ -135,7 +135,7 @@ function ContactInfoSection() {
           >
             <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm aspect-[4/3] lg:aspect-auto lg:h-[420px] w-full">
               <iframe
-                src="https://maps.google.com/maps?q=인천광역시+서구+봉화로223번안길+29&output=embed&hl=en&z=16"
+                src="https://maps.app.goo.gl/cDfRcYmT46qVynMfA"
                 className="w-full h-full"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
