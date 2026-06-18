@@ -49,7 +49,7 @@ export default function BasicSettingsPage() {
   if (loading) return <div className="text-sm text-gray-400">Loading...</div>
 
   return (
-    <div className="max-w-2xl">
+    <div>
       <h1 className="text-xl font-bold text-gray-900 mb-1">Basic settings</h1>
       <p className="text-sm text-gray-400 mb-8">Manage site footer and company information.</p>
 

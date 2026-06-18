@@ -170,7 +170,7 @@ function HistoryGroup({
             style={{ transitionDelay: `${Math.min(i * 40, 300)}ms` }}
           >
             {/* Dot */}
-            <div className={`absolute -left-[41px] top-[5px] w-2 h-2 rounded-full transition-all duration-500 ${inView ? 'bg-blue-400' : 'bg-gray-200'}`}
+            <div className={`absolute -left-[37px] top-[5px] w-2 h-2 rounded-full transition-all duration-500 ${inView ? 'bg-blue-400' : 'bg-gray-200'}`}
               style={{ transitionDelay: `${Math.min(i * 40, 300)}ms` }}
             />
             <div className="flex items-baseline gap-4">
@@ -222,7 +222,7 @@ function HistorySection() {
             <div />
             <div className="border-l-2 border-blue-200 pl-8 pb-2">
               <div className="relative">
-                <div className="absolute -left-[41px] top-[5px] w-3 h-3 rounded-full bg-blue-600 ring-4 ring-blue-100" />
+                <div className="absolute -left-[39px] top-[5px] w-3 h-3 rounded-full bg-blue-600 ring-4 ring-blue-100" />
                 <div className="flex items-baseline gap-4">
                   <span className="text-gray-400 text-xs tabular-nums shrink-0 w-16">1989. 04</span>
                   <span className="text-gray-900 text-sm font-semibold">DONGIN THERMO CO., LTD. established</span>

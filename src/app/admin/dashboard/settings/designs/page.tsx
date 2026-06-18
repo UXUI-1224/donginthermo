@@ -213,7 +213,7 @@ export default function DesignsPage() {
   if (loading) return <div className="text-sm text-gray-400">Loading...</div>
 
   return (
-    <div className="max-w-3xl flex flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-xl font-bold text-gray-900 mb-1">Designs</h1>
         <p className="text-sm text-gray-400">Manage videos and images displayed on the site.</p>

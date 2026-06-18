@@ -233,9 +233,9 @@ function HistoryItem({ milestone, index }: { milestone: typeof milestones[number
     >
       {/* Dot */}
       <div
-        className={`absolute -left-[29px] top-1.5 rounded-full ring-4 ring-gray-50 transition-all duration-500 ${
+        className={`absolute -left-[31px] top-1.5 rounded-full ring-4 ring-gray-50 transition-all duration-500 ${
           milestone.founded
-            ? 'w-4 h-4 -left-[31px] bg-blue-600 ring-blue-100 scale-100'
+            ? 'w-4 h-4 -left-[33px] bg-blue-600 ring-blue-100 scale-100'
             : inView ? 'w-3 h-3 bg-blue-400 scale-100' : 'w-3 h-3 bg-blue-200 scale-75'
         }`}
         style={{ transitionDelay: `${index * 60 + 200}ms` }}
