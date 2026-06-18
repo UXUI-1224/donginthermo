@@ -134,13 +134,7 @@ function ContactInfoSection() {
             }`}
           >
             <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm aspect-[4/3] lg:aspect-auto lg:h-[420px] w-full">
-              <iframe
-                src="https://maps.app.goo.gl/cDfRcYmT46qVynMfA?g_st=ic"
-                className="w-full h-full"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Donginthermo Location"
-              />
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3160.5946435170595!2d126.6324142773692!3d37.61169807202707!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357c80f4738a3b03%3A0xe2e518306db24ff!2zKOyjvCnrj5nsnbjsjajrqqggKERPTkdJTiBUSEVSTU8gQ08uLCBMVEQuKQ!5e0!3m2!1sen!2skr!4v1781763201194!5m2!1sen!2skr" width="600" height="450" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
             </div>
           </div>
 
