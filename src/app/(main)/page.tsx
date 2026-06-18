@@ -68,11 +68,11 @@ function HeroSection({ videoUrl }: { videoUrl: string }) {
             src={videoUrl}
             style={{
               position: 'absolute',
-              top: 0,
+              top: '50%',
               left: '50%',
-              height: '100%',
-              width: 'calc(100vh * 16 / 9)',
-              transform: 'translateX(-50%)',
+              width: 'max(100%, calc(100vh * 16 / 9))',                                                            
+              height: 'max(100%, calc(100vw * 9 / 16))',                                                           
+              transform: 'translate(-50%, -50%) scale(1.4)',
               border: 'none',
             }}
             allow="autoplay; fullscreen"
