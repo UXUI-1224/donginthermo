@@ -173,14 +173,19 @@ function FormSection() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => setForm((prev) => ({ ...prev, [field]: e.target.value }))
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitting(true)
-    setTimeout(() => {
-      setSubmitting(false)
-      alert('메일을 보냈습니다.')
-      setForm({ name: '', company: '', email: '', phone: '', subject: '', message: '' })
-    }, 600)
+    try {
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+    } catch { /* ignore — alert still shows */ }
+    setSubmitting(false)
+    alert('메일을 보냈습니다.')
+    setForm({ name: '', company: '', email: '', phone: '', subject: '', message: '' })
   }
 
   const inputCls =
