@@ -184,7 +184,7 @@ function FormSection() {
       })
     } catch { /* ignore — alert still shows */ }
     setSubmitting(false)
-    alert('메일을 보냈습니다.')
+    alert('Your message has been sent.')
     setForm({ name: '', company: '', email: '', phone: '', subject: '', message: '' })
   }
 

@@ -225,22 +225,20 @@ export default function MessagesPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3 w-8"></th>
                 <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3">From</th>
                 <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3 hidden md:table-cell">Subject</th>
-                <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3 hidden sm:table-cell w-24">Status</th>
                 <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3 hidden lg:table-cell w-40">Date</th>
-                <th className="px-5 py-3 w-16"></th>
+                <th className="px-5 py-3 w-10"></th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-16 text-gray-400 text-sm">Loading...</td>
+                  <td colSpan={4} className="text-center py-16 text-gray-400 text-sm">Loading...</td>
                 </tr>
               ) : messages.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-16 text-gray-400 text-sm">No messages yet.</td>
+                  <td colSpan={4} className="text-center py-16 text-gray-400 text-sm">No messages yet.</td>
                 </tr>
               ) : (
                 messages.map((msg) => (
@@ -249,16 +247,9 @@ export default function MessagesPage() {
                     onClick={() => setViewing(msg)}
                     className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors cursor-pointer"
                   >
-                    {/* Unread dot */}
-                    <td className="px-5 py-3.5">
-                      {msg.status === 'unread' && (
-                        <span className="block w-2 h-2 rounded-full bg-blue-500" />
-                      )}
-                    </td>
-
                     {/* From */}
                     <td className="px-5 py-3.5">
-                      <p className={`${msg.status === 'unread' ? 'font-semibold' : 'font-medium'} text-gray-900`}>
+                      <p className={`${msg.status === 'unread' ? 'font-bold' : 'font-medium'} text-gray-900 text-sm`}>
                         {msg.name}
                       </p>
                       <p className="text-xs text-gray-400 mt-0.5">{msg.email}</p>
@@ -266,30 +257,23 @@ export default function MessagesPage() {
 
                     {/* Subject */}
                     <td className="px-5 py-3.5 hidden md:table-cell">
-                      <span className={`${msg.status === 'unread' ? 'text-gray-800 font-medium' : 'text-gray-500'} line-clamp-1`}>
+                      <span className={`text-sm line-clamp-1 ${msg.status === 'unread' ? 'text-gray-900 font-semibold' : 'text-gray-500 font-normal'}`}>
                         {msg.subject}
-                      </span>
-                    </td>
-
-                    {/* Status */}
-                    <td className="px-5 py-3.5 hidden sm:table-cell">
-                      <span className={`inline-block px-2 py-0.5 text-[10px] font-semibold rounded-full ${STATUS_CLS[msg.status]}`}>
-                        {STATUS_LABEL[msg.status]}
                       </span>
                     </td>
 
                     {/* Date */}
                     <td className="px-5 py-3.5 hidden lg:table-cell">
-                      <span className="text-xs text-gray-400">{formatDate(msg.created_at)}</span>
+                      <span className={`text-xs ${msg.status === 'unread' ? 'text-gray-700 font-semibold' : 'text-gray-400'}`}>
+                        {formatDate(msg.created_at)}
+                      </span>
                     </td>
 
                     {/* Open */}
                     <td className="px-5 py-3.5 text-right">
-                      <span className="text-gray-300 group-hover:text-gray-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
-                      </span>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 inline text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
                     </td>
                   </tr>
                 ))
