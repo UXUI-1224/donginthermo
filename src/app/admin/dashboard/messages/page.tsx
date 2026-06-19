@@ -207,7 +207,7 @@ export default function MessagesPage() {
   return (
     <>
       {/* Header */}
-      <div className="mb-6 flex items-center gap-3">
+      <div className="mb-6 flex items-end gap-3">
         <div>
           <h1 className="text-xl font-bold text-gray-900">Messages</h1>
           <p className="text-sm text-gray-400 mt-0.5">Contact form submissions from visitors</p>
