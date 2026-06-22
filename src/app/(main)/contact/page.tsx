@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useInView } from '@/hooks/useInView'
+import ContactMap from './ContactMap'
 
 // ---------------------------------------------------------------------------
 // Page Hero
@@ -134,15 +135,7 @@ function ContactInfoSection() {
             }`}
           >
             <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm aspect-[4/3] lg:aspect-auto lg:h-[420px] w-full">
-              <iframe
-                src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=DONGINTHERMO+CO.,+LTD,+Incheon,+Korea&language=en&zoom=16`}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
+              <ContactMap />
             </div>
           </div>
 
