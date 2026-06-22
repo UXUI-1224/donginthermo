@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 const FIELDS = [
   { key: 'company_name', label: 'Company name', placeholder: 'Dongin Thermo Co., Ltd.' },
-  { key: 'address',      label: 'Address',      placeholder: '(22648) 29, Bonghwa-ro 223beonan-gil, Seo-gu, Incheon, Korea' },
+  { key: 'address',      label: 'Address',      placeholder: '(22648) 29, Bonghwa-ro 223 beonan-gil, Seo-gu, Incheon, Korea' },
   { key: 'phone',        label: 'Phone',        placeholder: '+82 032-565-9151' },
   { key: 'email',        label: 'Email',        placeholder: 'topcold@donginthermo.com' },
   { key: 'copyright',   label: 'Copyright',    placeholder: '© 2026 Donginthermo Co., Ltd. All rights reserved.' },
