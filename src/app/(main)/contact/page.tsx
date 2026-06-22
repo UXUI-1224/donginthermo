@@ -87,7 +87,7 @@ function ContactInfoSection() {
             <div className="flex flex-col gap-6">
               <InfoItem
                 label="Address"
-                value="29, Bonghwa-ro 223beonan-gil, Seo-gu, Incheon 22648, Korea"
+                value="(22648) 29, Bonghwa-ro 223beonan-gil, Seo-gu, Incheon, Korea"
                 icon={
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -97,7 +97,7 @@ function ContactInfoSection() {
               />
               <InfoItem
                 label="Phone"
-                value="+82-32-565-9151"
+                value="+82 032-565-9151"
                 href="tel:+82325659151"
                 icon={
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>

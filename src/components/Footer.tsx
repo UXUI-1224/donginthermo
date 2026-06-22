@@ -11,8 +11,8 @@ async function getSiteSettings(): Promise<Record<string, string>> {
 export default async function Footer() {
   const settings = await getSiteSettings()
 
-  const address = settings.address || '29, Bonghwa-ro 223beonan-gil, Seo-gu, Incheon 22648, Korea'
-  const phone   = settings.phone   || '+82-32-565-9151'
+  const address = settings.address || '(22648) 29, Bonghwa-ro 223beonan-gil, Seo-gu, Incheon, Korea'
+  const phone   = settings.phone   || '+82 032-565-9151'
   const email   = settings.email   || 'topcold@donginthermo.com'
   const copyright = settings.copyright || '© 2026 Donginthermo Co., Ltd. All rights reserved.'
 
