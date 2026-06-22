@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 
@@ -18,6 +19,7 @@ export async function PUT(
     .eq('id', id)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  revalidatePath('/technology/trademark')
   return NextResponse.json({ success: true })
 }
 
@@ -46,5 +48,6 @@ export async function DELETE(
 
   const { error } = await supabaseAdmin.from('trademarks').delete().eq('id', id)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  revalidatePath('/technology/trademark')
   return NextResponse.json({ success: true })
 }

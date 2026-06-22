@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 
@@ -35,6 +36,7 @@ export async function POST(
 
   if (dbError) return NextResponse.json({ error: dbError.message }, { status: 500 })
 
+  revalidatePath('/technology/cert')
   return NextResponse.json({ img_url: freshUrl })
 }
 
@@ -66,5 +68,6 @@ export async function DELETE(
     .eq('id', id)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  revalidatePath('/technology/cert')
   return NextResponse.json({ success: true })
 }

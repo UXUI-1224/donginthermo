@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 
@@ -26,5 +27,6 @@ export async function POST(
 
   if (dbError) return NextResponse.json({ error: dbError.message }, { status: 500 })
 
+  revalidatePath('/products', 'layout')
   return NextResponse.json(imgRow)
 }

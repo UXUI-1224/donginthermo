@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 
@@ -43,5 +44,6 @@ export async function POST(req: Request) {
     .single()
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  revalidatePath('/technology/trademark')
   return NextResponse.json(data)
 }
