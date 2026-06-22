@@ -24,17 +24,23 @@ export default function ContactMap() {
       if (!containerRef.current || !google) return
       const map = new google.maps.Map(containerRef.current, {
         center: CENTER,
-        zoom: 16,
+        zoom: 18,
         styles: MAP_STYLES,
         mapTypeControl: false,
         fullscreenControl: false,
         streetViewControl: false,
       })
-      new google.maps.Marker({
+      const marker = new google.maps.Marker({
         position: CENTER,
         map,
         title: 'DONGINTHERMO CO., LTD.',
       })
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: '<span style="font-size:16px;font-weight:700;color:#EA4335;white-space:nowrap;">DONGINTHERMO CO., LTD.</span>',
+        disableAutoPan: true,
+      })
+      infoWindow.open({ anchor: marker, map })
     }
 
     if (g) {
@@ -56,5 +62,20 @@ export default function ContactMap() {
     document.head.appendChild(script)
   }, [])
 
-  return <div ref={containerRef} className="w-full h-full" />
+  return (
+    <div className="relative w-full h-full">
+      <div ref={containerRef} className="w-full h-full" />
+
+      {/* Custom info card */}
+      <div className="absolute top-4 left-4 bg-white rounded-xl shadow-md px-4 py-3 max-w-[240px] pointer-events-none">
+        <p className="text-[16px] font-bold text-gray-900 leading-snug">
+          DONGINTHERMO CO., LTD.
+        </p>
+        <p className="text-[14px] text-gray-500 leading-relaxed mt-1">
+          (2264829) <br /> Bonghwa-ro 223 beonan-gil,<br />
+          Seo-gu, Incheon, Korea
+        </p>
+      </div>
+    </div>
+  )
 }
