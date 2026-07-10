@@ -78,7 +78,7 @@ function VideoEmbedSlot({
           value={videoId}
           onChange={(e) => { setVideoId(e.target.value); setSaved(false) }}
           onKeyDown={(e) => e.key === 'Enter' && handleSave()}
-          placeholder="Vimeo Video ID (예: 1202071951)"
+          placeholder="Vimeo Video URL ID (example: 1202071951)"
           className="flex-1 px-3.5 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 outline-none focus:border-[#016cab] focus:ring-2 focus:ring-[#016cab]/10 transition-all"
         />
         <button
@@ -91,7 +91,7 @@ function VideoEmbedSlot({
       </div>
       {error && <p className="text-xs text-red-500 mt-1.5">{error}</p>}
       <p className="text-xs text-gray-400 mt-2">
-        Vimeo 영상 URL에서 숫자 ID만 입력하세요. 예: vimeo.com/<strong>1202071951</strong>
+        Please Enter Vimeo Video URL only ID number. example: vimeo.com/<strong>1202071951</strong>
       </p>
     </div>
   )
