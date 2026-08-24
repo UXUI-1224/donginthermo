@@ -46,8 +46,11 @@ function CEOSection({ videoUrl }: { videoUrl: string }) {
               <video
                 src={videoUrl}
                 className="absolute inset-0 w-full h-full object-cover"
-                controls
+                autoPlay
+                muted
+                loop
                 playsInline
+                controls
               />
             ) : (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950">

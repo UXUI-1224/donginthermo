@@ -77,7 +77,6 @@ function HeroSection({ videoUrl }: { videoUrl: string }) {
               width: 'max(100%, calc(100vh * 16 / 9))',
               height: 'max(100%, calc(100vw * 9 / 16))',
               transform: 'translate(-50%, -50%) scale(1.4)',
-              objectFit: 'cover',
             }}
           />
         </div>
