@@ -43,11 +43,11 @@ function CEOSection({ videoUrl }: { videoUrl: string }) {
             }`}
           >
             {videoUrl ? (
-              <iframe
+              <video
                 src={videoUrl}
-                className="absolute inset-0 w-full h-full"
-                allow="autoplay; fullscreen; picture-in-picture"
-                allowFullScreen
+                className="absolute inset-0 w-full h-full object-cover"
+                controls
+                playsInline
               />
             ) : (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950">

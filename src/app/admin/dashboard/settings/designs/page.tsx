@@ -7,53 +7,70 @@ type Settings = Record<string, string>
 // ── Reusable upload components ────────────────────────────────────────────────
 
 
-const VIMEO_EMBED_URL = (id: string) =>
-  `https://player.vimeo.com/video/${id}?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&muted=1&loop=1&controls=0`
-
-const VIMEO_BG_URL = (id: string) =>
-  `https://player.vimeo.com/video/${id}?background=1&autoplay=1&loop=1&muted=1`
-
-function VideoEmbedSlot({
+function VideoUploadSlot({
   label,
   description,
   settingKey,
   value,
   onChange,
-  embedUrlFn = VIMEO_EMBED_URL,
 }: {
   label: string
   description?: string
   settingKey: string
   value: string
   onChange: (url: string) => void
-  embedUrlFn?: (id: string) => string
 }) {
-  // Extract video ID from stored URL if already saved
-  const savedId = value.match(/vimeo\.com\/video\/(\d+)/)?.[1] ?? ''
-  const [videoId, setVideoId] = useState(savedId)
-  const [saving, setSaving] = useState(false)
-  const [saved, setSaved] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [progress, setProgress] = useState(0)
   const [error, setError] = useState('')
+  const fileRef = useRef<HTMLInputElement>(null)
 
-  const handleSave = async () => {
-    if (!videoId.trim()) return
-    const embedUrl = embedUrlFn(videoId.trim())
-    setSaving(true)
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    setProgress(0)
     setError('')
     try {
-      const res = await fetch('/api/admin/settings', {
+      const path = `${settingKey}-${Date.now()}.mp4`
+
+      // 1. Get presigned URL
+      const signRes = await fetch('/api/admin/sign-upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bucket: 'site-assets', path }),
+      })
+      if (!signRes.ok) throw new Error((await signRes.json()).error)
+      const { signedUrl, publicUrl } = await signRes.json()
+
+      // 2. Upload directly to Supabase via XHR (progress tracking)
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest()
+        xhr.open('PUT', signedUrl)
+        xhr.setRequestHeader('Content-Type', 'video/mp4')
+        xhr.upload.onprogress = (ev) => {
+          if (ev.lengthComputable) setProgress(Math.round((ev.loaded / ev.total) * 100))
+        }
+        xhr.onload = () => xhr.status < 300 ? resolve() : reject(new Error('Upload failed'))
+        xhr.onerror = () => reject(new Error('Network error'))
+        xhr.send(file)
+      })
+
+      // 3. Save URL to settings
+      const saveRes = await fetch('/api/admin/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ [settingKey]: embedUrl }),
+        body: JSON.stringify({ [settingKey]: publicUrl }),
       })
-      if (!res.ok) throw new Error((await res.json()).error)
-      onChange(embedUrl)
-      setSaved(true)
-      setTimeout(() => setSaved(false), 2000)
+      if (!saveRes.ok) throw new Error((await saveRes.json()).error)
+
+      onChange(publicUrl)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to save.')
+      setError(e instanceof Error ? e.message : 'Upload failed.')
     } finally {
-      setSaving(false)
+      setUploading(false)
+      setProgress(0)
+      if (fileRef.current) fileRef.current.value = ''
     }
   }
 
@@ -64,35 +81,42 @@ function VideoEmbedSlot({
 
       {value && (
         <div className="mb-4 rounded-lg overflow-hidden aspect-video bg-black">
-          <iframe
+          <video
             src={value}
-            className="w-full h-full"
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowFullScreen
+            className="w-full h-full object-cover"
+            controls
+            playsInline
           />
         </div>
       )}
 
-      <div className="flex gap-2">
-        <input
-          value={videoId}
-          onChange={(e) => { setVideoId(e.target.value); setSaved(false) }}
-          onKeyDown={(e) => e.key === 'Enter' && handleSave()}
-          placeholder="Vimeo Video URL ID (example: 1202071951)"
-          className="flex-1 px-3.5 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 outline-none focus:border-[#016cab] focus:ring-2 focus:ring-[#016cab]/10 transition-all"
-        />
-        <button
-          onClick={handleSave}
-          disabled={saving || !videoId.trim()}
-          className="px-4 py-2 bg-[#016cab] hover:bg-[#015689] disabled:opacity-50 text-white text-sm font-semibold rounded-lg transition-colors shrink-0"
-        >
-          {saving ? 'Saving...' : saved ? 'Saved!' : 'Save'}
-        </button>
-      </div>
+      <input ref={fileRef} type="file" accept="video/mp4,video/*" className="hidden" onChange={handleUpload} />
+      <button
+        onClick={() => fileRef.current?.click()}
+        disabled={uploading}
+        className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-200 rounded-lg text-sm text-gray-500 hover:border-[#016cab] hover:text-[#016cab] transition-all disabled:opacity-50"
+      >
+        {uploading ? (
+          <svg className="w-4 h-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+          </svg>
+        ) : (
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+          </svg>
+        )}
+        {uploading ? `Uploading... ${progress}%` : 'Upload video (.mp4)'}
+      </button>
+
+      {uploading && (
+        <div className="mt-2 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-full bg-[#016cab] transition-all duration-300" style={{ width: `${progress}%` }} />
+        </div>
+      )}
+
       {error && <p className="text-xs text-red-500 mt-1.5">{error}</p>}
-      <p className="text-xs text-gray-400 mt-2">
-        Please Enter Vimeo Video URL only ID number. example: vimeo.com/<strong>1202071951</strong>
-      </p>
+      <p className="text-xs text-gray-400 mt-2">Upload an MP4 file. Compressed files recommended (under 10 MB).</p>
     </div>
   )
 }
@@ -243,21 +267,20 @@ export default function DesignsPage() {
 
       {/* Hero Video */}
       <div className="bg-white border border-gray-100 rounded-xl p-6">
-        <VideoEmbedSlot
+        <VideoUploadSlot
           label="Hero Video"
           description="Homepage hero section background video."
           settingKey="hero_video_url"
           value={settings.hero_video_url ?? ''}
           onChange={update('hero_video_url')}
-          embedUrlFn={VIMEO_BG_URL}
         />
       </div>
 
       {/* CEO Interview Video */}
       <div className="bg-white border border-gray-100 rounded-xl p-6">
-        <VideoEmbedSlot
+        <VideoUploadSlot
           label="CEO Interview"
-          description="Video displayed in the About page CEO section. Paste a Vimeo or YouTube URL."
+          description="Video displayed in the About page CEO section."
           settingKey="ceo_video_url"
           value={settings.ceo_video_url ?? ''}
           onChange={update('ceo_video_url')}

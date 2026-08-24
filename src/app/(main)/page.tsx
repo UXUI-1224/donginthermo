@@ -64,18 +64,21 @@ function HeroSection({ videoUrl }: { videoUrl: string }) {
     <section className="relative h-screen flex items-center overflow-hidden bg-blue-900">
       {videoUrl && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40">
-          <iframe
+          <video
             src={videoUrl}
+            autoPlay
+            muted
+            loop
+            playsInline
             style={{
               position: 'absolute',
               top: '50%',
               left: '50%',
-              width: 'max(100%, calc(100vh * 16 / 9))',                                                            
-              height: 'max(100%, calc(100vw * 9 / 16))',                                                           
-              transform: 'translate(-50%, -50%) scale(1.4)', // Scale up to cover letterboxing on wider screens
-              border: 'none',
+              width: 'max(100%, calc(100vh * 16 / 9))',
+              height: 'max(100%, calc(100vw * 9 / 16))',
+              transform: 'translate(-50%, -50%) scale(1.4)',
+              objectFit: 'cover',
             }}
-            allow="autoplay; fullscreen"
           />
         </div>
       )}
