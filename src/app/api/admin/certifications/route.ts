@@ -12,10 +12,10 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const body = await req.json()
-  const { name, category } = body
+  const { name } = body
 
-  if (!name || !category) {
-    return NextResponse.json({ error: 'name and category are required' }, { status: 400 })
+  if (!name) {
+    return NextResponse.json({ error: 'name is required' }, { status: 400 })
   }
 
   const { data: last } = await supabaseAdmin
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
 
   const { data, error } = await supabaseAdmin
     .from('certifications')
-    .insert({ id, name, category, sort_order })
+    .insert({ id, name, sort_order })
     .select('*')
     .single()
 
