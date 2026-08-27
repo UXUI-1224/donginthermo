@@ -27,9 +27,11 @@ export async function POST(req: Request) {
 
   const sort_order = (last?.sort_order ?? 0) + 1
 
+  const id = crypto.randomUUID()
+
   const { data, error } = await supabaseAdmin
     .from('certifications')
-    .insert({ name, category, sort_order })
+    .insert({ id, name, category, sort_order })
     .select('*')
     .single()
 

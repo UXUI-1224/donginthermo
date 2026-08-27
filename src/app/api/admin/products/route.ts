@@ -29,9 +29,11 @@ export async function POST(req: Request) {
 
   const sort_order = (last?.sort_order ?? 0) + 1
 
+  const id = crypto.randomUUID()
+
   const { data, error } = await supabaseAdmin
     .from('products')
-    .insert({ name, category, tagline: tagline ?? '', features: features ?? [], sort_order })
+    .insert({ id, name, category, tagline: tagline ?? '', features: features ?? [], sort_order })
     .select('*, product_images(id, img_url, alt, sort_order)')
     .single()
 
