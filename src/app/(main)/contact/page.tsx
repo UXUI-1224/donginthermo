@@ -169,6 +169,7 @@ function FormSection() {
     message: '',
   })
   const [submitting, setSubmitting] = useState(false)
+  const [sent, setSent] = useState(false)
 
   const set = (field: keyof typeof form) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -185,8 +186,9 @@ function FormSection() {
       })
     } catch { /* ignore — alert still shows */ }
     setSubmitting(false)
-    alert('Your message has been sent.')
+    setSent(true)
     setForm({ name: '', company: '', email: '', phone: '', subject: '', message: '' })
+    setTimeout(() => setSent(false), 4000)
   }
 
   const inputCls =
@@ -336,8 +338,10 @@ function FormSection() {
             </p>
             <button
               type="submit"
-              disabled={submitting}
-              className="flex items-center gap-2 px-8 py-3 bg-[#016cab] hover:bg-[#015689] disabled:opacity-60 text-white text-sm font-semibold rounded-xl transition-colors"
+              disabled={submitting || sent}
+              className={`flex items-center gap-2 px-8 py-3 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-60 ${
+                sent ? 'bg-green-500' : 'bg-[#016cab] hover:bg-[#015689]'
+              }`}
             >
               {submitting ? (
                 <>
@@ -346,6 +350,13 @@ function FormSection() {
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                   </svg>
                   Sending...
+                </>
+              ) : sent ? (
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Message Sent
                 </>
               ) : (
                 <>
