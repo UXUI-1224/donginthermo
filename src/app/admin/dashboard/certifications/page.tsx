@@ -30,22 +30,65 @@ function AddModal({
 }) {
   const [name, setName] = useState('')
   const [category, setCategory] = useState(CATEGORIES[0])
+  const [file, setFile] = useState<File | null>(null)
+  const [preview, setPreview] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0]
+    if (!f) return
+    setFile(f)
+    setPreview(URL.createObjectURL(f))
+  }
+
+  const clearFile = () => {
+    setFile(null)
+    setPreview('')
+    if (fileRef.current) fileRef.current.value = ''
+  }
 
   const handleAdd = async () => {
     if (!name.trim()) { setError('Name is required.'); return }
     setSaving(true)
     setError('')
     try {
+      // 1. Create cert record
       const res = await fetch('/api/admin/certifications', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: name.trim(), category }),
       })
-      const json = await res.json()
-      if (!res.ok) throw new Error(json.error)
-      onAdded(json)
+      const cert = await res.json()
+      if (!res.ok) throw new Error(cert.error)
+
+      // 2. Upload image if selected
+      if (file) {
+        const ext = file.name.split('.').pop()
+        const path = `${cert.id}.${ext}`
+
+        const signRes = await fetch('/api/admin/sign-upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ bucket: 'cert-images', path }),
+        })
+        if (!signRes.ok) throw new Error((await signRes.json()).error)
+        const { signedUrl, publicUrl } = await signRes.json()
+
+        await fetch(signedUrl, { method: 'PUT', body: file, headers: { 'Content-Type': file.type } })
+
+        const imgRes = await fetch(`/api/admin/certifications/${cert.id}/image`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: publicUrl }),
+        })
+        if (!imgRes.ok) throw new Error((await imgRes.json()).error)
+        const { img_url } = await imgRes.json()
+        cert.img_url = img_url
+      }
+
+      onAdded(cert)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to add.')
     } finally {
@@ -85,7 +128,34 @@ function AddModal({
               className={inputCls}
             />
           </div>
-          <p className="text-xs text-gray-400">Certificate image can be uploaded after creation.</p>
+          {/* Image */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Certificate Image</label>
+            {preview ? (
+              <div className="relative group inline-block mb-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={preview} alt="" className="w-24 aspect-[3/4] object-cover rounded-lg border border-gray-100" />
+                <button
+                  onClick={clearFile}
+                  className="absolute top-1 right-1 w-5 h-5 bg-white/90 rounded-full flex items-center justify-center text-gray-500 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all shadow-sm"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            ) : null}
+            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+            <button
+              onClick={() => fileRef.current?.click()}
+              className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-[#016cab] hover:text-[#016cab] transition-all"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+              </svg>
+              {file ? 'Change image' : 'Upload image'}
+            </button>
+          </div>
           {error && <p className="text-sm text-red-500">{error}</p>}
         </div>
         <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-gray-100">
