@@ -28,6 +28,100 @@ const CATEGORY_LABELS: Record<string, string> = {
   sub: 'SUB',
 }
 
+// ── Add Modal ─────────────────────────────────────────────────────────────────
+
+function AddModal({
+  onClose,
+  onAdded,
+}: {
+  onClose: () => void
+  onAdded: (product: Product) => void
+}) {
+  const [name, setName] = useState('')
+  const [category, setCategory] = useState('van')
+  const [tagline, setTagline] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleAdd = async () => {
+    if (!name.trim()) { setError('Name is required.'); return }
+    setSaving(true)
+    setError('')
+    try {
+      const res = await fetch('/api/admin/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name.trim(), category, tagline: tagline.trim(), features: [] }),
+      })
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.error)
+      onAdded(json)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to add.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const inputCls = 'w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-900 outline-none focus:border-[#016cab] focus:ring-2 focus:ring-[#016cab]/10 transition-all bg-white'
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-black/30" onClick={onClose} />
+      <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-[440px] flex flex-col overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+          <h2 className="font-semibold text-gray-900">Add Product</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div className="px-6 py-5 flex flex-col gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">Category <span className="text-red-400">*</span></label>
+            <select value={category} onChange={(e) => setCategory(e.target.value)} className={inputCls}>
+              {Object.entries(CATEGORY_LABELS).map(([val, label]) => (
+                <option key={val} value={val}>{label}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">Name <span className="text-red-400">*</span></label>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Product name"
+              className={inputCls}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">Tagline</label>
+            <input
+              value={tagline}
+              onChange={(e) => setTagline(e.target.value)}
+              placeholder="Short description"
+              className={inputCls}
+            />
+          </div>
+          <p className="text-xs text-gray-400">Images and features can be added after creation.</p>
+          {error && <p className="text-sm text-red-500">{error}</p>}
+        </div>
+        <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-gray-100">
+          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors">Cancel</button>
+          <button
+            onClick={handleAdd}
+            disabled={saving}
+            className="px-5 py-2 bg-[#016cab] hover:bg-[#015689] disabled:opacity-50 text-white text-sm font-semibold rounded-lg transition-colors"
+          >
+            {saving ? 'Adding...' : 'Add'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ── Edit Modal ────────────────────────────────────────────────────────────────
 
 function EditModal({
@@ -327,6 +421,7 @@ function EditModal({
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const [showAdd, setShowAdd] = useState(false)
   const [editing, setEditing] = useState<Product | null>(null)
 
   useEffect(() => {
@@ -335,6 +430,11 @@ export default function ProductsPage() {
       .then((data) => setProducts(data))
       .finally(() => setLoading(false))
   }, [])
+
+  const handleAdded = (product: Product) => {
+    setProducts((prev) => [...prev, product])
+    setShowAdd(false)
+  }
 
   const handleSaved = (updated: Product) => {
     setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)))
@@ -349,9 +449,20 @@ export default function ProductsPage() {
   return (
     <>
       {/* Page header */}
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-gray-900">Products</h1>
-        <p className="text-sm text-gray-400 mt-0.5">Manage product listings and images</p>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-bold text-gray-900">Products</h1>
+          <p className="text-sm text-gray-400 mt-0.5">Manage product listings and images</p>
+        </div>
+        <button
+          onClick={() => setShowAdd(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-[#016cab] hover:bg-[#015689] text-white text-sm font-semibold rounded-lg transition-colors shrink-0"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          Add Product
+        </button>
       </div>
 
       {/* Table */}
@@ -422,6 +533,10 @@ export default function ProductsPage() {
           </table>
         </div>
       </div>
+
+      {showAdd && (
+        <AddModal onClose={() => setShowAdd(false)} onAdded={handleAdded} />
+      )}
 
       {/* Edit Modal */}
       {editing && (
